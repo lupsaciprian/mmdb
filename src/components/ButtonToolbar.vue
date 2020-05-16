@@ -8,7 +8,7 @@
       class="btn mr-1 mb-1"
       :class="[
         selectedId === option.id ? 'btn-success' : 'btn-outline-dark',
-        `btn-${buttonSize}`,
+        `btn-${buttonSize}`
       ]"
     >
       {{ option.name }}
@@ -21,26 +21,26 @@ export default {
   props: {
     options: {
       type: Array,
-      required: true,
+      required: true
     },
     buttonSize: {
       type: String,
-      default: 'sm',
-    },
+      default: "sm"
+    }
   },
   data() {
     return {
-      selectedId: null,
+      selectedId: null
     };
   },
   methods: {
     select(option) {
       if (this.selectedId !== option.id) {
         this.selectedId = option.id;
-        this.$emit('optionSelected', option);
+        this.$emit("optionSelected", option);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

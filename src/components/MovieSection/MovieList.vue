@@ -1,145 +1,104 @@
 <template>
   <div class="container my-4">
-    <div class="container my-2" v-loading="loading">
+    <div
+      class="container my-2"
+      v-loading="movies.loading"
+    >
       <div class="row justify-content-between">
-        <h2>{{ resource.name }}</h2>
+        <h2>{{ movies.name }}</h2>
         <app-button-toolbar
-          v-if="options.length > 0"
+          v-if="movies.options && movies.options.length > 0"
           class="col-12 col-md-8"
-          :class="{ 'box-disabled': loading }"
-          v-loading="optionsLoading"
-          :options="options"
+          :class="{ 'box-disabled': movies.loading }"
+          v-loading="movies.optionsLoading"
+          :options="movies.options"
           @optionSelected="optionSelected"
         />
       </div>
     </div>
 
-    <app-alert v-if="requireSelect" type="info" :text="requireSelectText" />
+    <app-alert
+      v-if="movies.requireOptions"
+      type="info"
+      :text="movies.requireOptionsMessage"
+    />
     <div
       v-else
       class="container movie-container position-relative custom-scrollbar"
       v-scroll="handleScroll"
     >
       <div class="row flex-nowrap">
-        <app-movie v-for="movie in data" :movie="movie" :key="movie.id" />
+        <app-movie
+          v-for="movie in movies.movies"
+          :movie="movie"
+          :key="movie.id"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from '@/api';
+// import axios from "@/api";
 
-import MovieVue from './Movie.vue';
-import ButtonToolbarVue from '../ButtonToolbar.vue';
-import AlertVue from '../Alert.vue';
+import MovieVue from "./Movie.vue";
+import ButtonToolbarVue from "../ButtonToolbar.vue";
+import AlertVue from "../Alert.vue";
+
+import { MOVIE_LISTS } from "@/store/storeconstants";
 
 export default {
   props: {
     resource: {
       type: Object,
-      required: true,
+      required: true
     },
     meta: {
-      type: Object,
-    },
+      type: Object
+    }
   },
   components: {
     appMovie: MovieVue,
     appButtonToolbar: ButtonToolbarVue,
-    appAlert: AlertVue,
+    appAlert: AlertVue
   },
-  data() {
-    return {
-      loading: false,
-      optionsLoading: false,
-      type: 'movie',
-      timeWindow: 'day',
-      data: [],
-      options: [],
-      page: 1,
-      requestUrl: null,
-      requireSelect: false,
-      requireSelectText: '',
-    };
-  },
-  mounted() {
-    switch (this.resource.id) {
-      case 'trending':
-        this.requestUrl = `/trending/${this.type}/${this.timeWindow}`;
-        this.getMovies();
-        break;
-      case 'bygenre':
-        this.optionsLoading = true;
-        this.requireSelect = true;
-        this.requireSelectText = 'Please select a movie genre first';
-        axios.get('/genre/movie/list').then((resp) => {
-          this.optionsLoading = false;
-          this.options = resp.data.genres;
-        });
-        break;
-      case 'toprated':
-        this.requestUrl = '/movie/top_rated';
-        this.getMovies();
-        break;
-      case 'upcoming':
-        this.requestUrl = '/movie/upcoming';
-        this.getMovies();
-        break;
-      case 'popular':
-        this.requestUrl = '/movie/popular';
-        this.getMovies();
-        break;
-      case 'similar':
-        this.requestUrl = `/movie/${this.meta.byId}/similar`;
-        this.getMovies();
-        break;
-      case 'recommended':
-        this.requestUrl = `/movie/${this.meta.byId}/recommendations`;
-        this.getMovies();
-        break;
+  computed: {
+    movies() {
+      const movies = this.$store.getters[`${MOVIE_LISTS}/getFromMovieLists`](
+        this.resource.id
+      );
+      return movies;
     }
   },
+  mounted() {
+    this.$store.dispatch(`${MOVIE_LISTS}/initializeMovieList`, {
+      id: this.movies.id,
+      listType: this.movies.listType
+    });
+  },
   methods: {
-    reInitializeMovies() {
-      this.data = [];
-      this.page = 1;
-    },
-    getMovies() {
-      this.loading = true;
-      setTimeout(() => {
-        axios
-          .get(this.requestUrl, {
-            params: {
-              page: this.page,
-            },
-          })
-          .then((resp) => {
-            this.loading = false;
-            this.data = [...this.data, ...resp.data.results];
-            this.page++;
-          })
-          .catch((e) => console.log(e));
-      }, 1000);
-    },
     handleScroll($e) {
       if (
         $e.target.scrollWidth - $e.target.scrollLeft < 1200 &&
-        !this.loading &&
-        this.page < 5
+        !this.movies.loading &&
+        this.movies.page < 5
       ) {
-        this.getMovies();
+        this.$store.dispatch(`${MOVIE_LISTS}/populateMovieList`, {
+          listType: this.movies.listType,
+          id: this.movies.id,
+          page: this.movies.page
+        });
       }
     },
     optionSelected($e) {
-      if (this.resource.id === 'bygenre') {
-        this.reInitializeMovies();
-        this.requestUrl = `/discover/movie?with_genres=${$e.id}`;
-        this.getMovies();
-        this.requireSelect = false;
-      }
-    },
-  },
+      this.$store.dispatch(`${MOVIE_LISTS}/actionSelected`, {
+        listType: this.movies.listType,
+        id: this.movies.id,
+        option: $e.id,
+        page: this.movies.page
+      });
+    }
+  }
 };
 </script>
 

@@ -5,7 +5,6 @@ export default {
         el.removeEventListener('scroll', f);
       }
     };
-    console.log(el);
     el.addEventListener('scroll', f);
   },
 };

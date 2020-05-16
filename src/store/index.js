@@ -1,7 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { MOVIE_LISTS } from '@/store/storeconstants';
 
-import home from './modules/home';
+import movieLists from './modules/MovieLists';
+
+console.log(MOVIE_LISTS);
 
 Vue.use(Vuex);
 
@@ -10,9 +13,9 @@ export default new Vuex.Store({
   mutations: {},
   actions: {},
   modules: {
-    home: {
+    [MOVIE_LISTS]: {
       namespaced: true,
-      ...home,
+      ...movieLists,
     },
   },
 });
