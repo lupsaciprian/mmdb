@@ -1,0 +1,47 @@
+.progress {
+  height: 0.5rem;
+}
+
+.progress-bar.indeterminate {
+  position: relative;
+  animation: progress-indeterminate 1s linear infinite;
+}
+
+@keyframes progress-indeterminate {
+  from {
+    left: -25%;
+    width: 25%;
+  }
+  to {
+    left: 100%;
+    width: 25%;
+  }
+}
+
+.full-screen {
+  height: 100vh;
+}
+
+.box-disabled {
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.bw-4 {
+  border-width: 4px !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 0.5rem;
+}
+
+/* scrollbar track */
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.125);
+}
+
+/* scrollbar handle */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #6c757d;
+  // background-image: linear-gradient(to top, #ccc 0%, #007bff 100%);
+}
