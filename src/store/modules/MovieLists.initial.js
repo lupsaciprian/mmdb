@@ -1,4 +1,5 @@
 export const INITIAL_STATE = {
+  movieDetailsId: null,
   movieLists: {
     trending: {
       id: 'trending',
@@ -17,6 +18,11 @@ export const INITIAL_STATE = {
     upcoming: {
       id: 'upcoming',
       name: 'Upcoming Movies',
+      listType: 'movieLists',
+    },
+    latestseries: {
+      id: 'latestseries',
+      name: 'Latest TV Series',
       listType: 'movieLists',
     },
   },

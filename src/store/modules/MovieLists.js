@@ -15,7 +15,7 @@ export default {
         (key) => state.passiveMovieList[key]
       ),
 
-    getFromMovieLists: (state) => (id) => state.movieLists[id],
+    getFromMovieLists: (state) => (listType, id) => state[listType][id],
   },
   mutations: {
     mutateMovieLists: (state, payload) => {
@@ -48,7 +48,6 @@ export default {
         ...state[payload.listType][payload.id],
         ...payload.toUpdate,
       };
-      console.log('Updated', state[payload.listType][payload.id]);
     },
     resetMovieProp: (state, payload) => {
       state[payload.listType][payload.id] = {
@@ -56,6 +55,17 @@ export default {
         movies: COMPONENT_INITIAL.movies,
         page: COMPONENT_INITIAL.page,
       };
+    },
+
+    setError: (state, payload) => {
+      state[payload.listType][payload.id] = {
+        ...state[payload.listType][payload.id],
+        error: payload.error,
+      };
+    },
+
+    setMovieDetailsId: (state, payload) => {
+      state.movieDetailsId = payload;
     },
   },
   actions: {
@@ -66,7 +76,7 @@ export default {
       commit('mutateMovieLists', payload);
     },
 
-    initializeMovieList: ({ commit, dispatch }, payload) => {
+    initializeMovieList: ({ commit, dispatch, state }, payload) => {
       payload = { ...payload, ...COMPONENT_INITIAL };
 
       switch (payload.id) {
@@ -87,13 +97,16 @@ export default {
         case 'popular':
           payload.requestUrl = '/movie/popular';
           break;
+        case 'latestseries':
+          // payload :)
+          payload.latestSeries = '/tv/airing_today';
+          break;
         case 'similar':
-          // /movie/${payload.meta.byId}/similar
-          payload.paramsRequired = true;
+          payload.requestUrl = `/movie/${state.movieDetailsId}/similar`;
           break;
         case 'recommended':
           // /movie/${payload.meta.byId}/recommendations
-          payload.paramsRequired = true;
+          payload.requestUrl = `/movie/${state.movieDetailsId}/recommendations`;
           break;
       }
 
@@ -104,14 +117,33 @@ export default {
     populateMovieList: async ({ commit, state }, payload) => {
       const { id, listType } = payload;
       const list = state[listType][id];
+      console.log('Payload for', payload);
 
-      if (!list.requireOptions && !list.requireParams) {
+      const handleError = (err) => {
         commit('setProperty', {
           id,
           listType,
-          toUpdate: { loading: true },
+          toUpdate: {
+            loading: false,
+            error: {
+              title: err.response
+                ? `Error! (${err.response.data.status_code})`
+                : 'Error!',
+              message: err.response
+                ? err.response.data.status_message
+                : 'There was a problem loading this section.',
+            },
+          },
         });
+      };
 
+      commit('setProperty', {
+        id,
+        listType,
+        toUpdate: { loading: true },
+      });
+
+      if (!list.requireOption) {
         try {
           const res = await axios.get(list.requestUrl, {
             params: { page: payload.page },
@@ -123,18 +155,13 @@ export default {
               loading: false,
               movies: [...list.movies, ...res.data.results],
               page: payload.page + 1,
+              error: null,
             },
           });
         } catch (err) {
-          console.log(err);
+          handleError(err);
         }
       } else if (list.requireOptions) {
-        commit('setProperty', {
-          id,
-          listType,
-          toUpdate: { optionsLoading: true },
-        });
-
         let url;
         if (id === 'bygenre') url = '/genre/movie/list';
 
@@ -144,12 +171,13 @@ export default {
             id,
             listType,
             toUpdate: {
-              optionsLoading: false,
+              loading: false,
               options: [...list.options, ...res.data.genres],
+              error: null,
             },
           });
         } catch (err) {
-          console.log(err);
+          handleError(err);
         }
       }
     },
@@ -163,7 +191,7 @@ export default {
           id,
           listType,
           toUpdate: {
-            requestUrl: `/discover/movie?with_genres=${payload.option}`,
+            requestUrl: `/discover/movie?with_genre=${payload.option}`,
             requireOptions: false,
           },
         });
@@ -174,6 +202,11 @@ export default {
 
     resetMovieProp: ({ commit }, payload) => {
       commit('resetMovieProp', payload);
+    },
+
+    setMovieDetailsId: ({ commit }, payload) => {
+      console.log('Set movie details id: ', payload);
+      commit('setMovieDetailsId', payload);
     },
   },
 };

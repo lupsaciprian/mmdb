@@ -10,29 +10,56 @@
           v-if="movies.options && movies.options.length > 0"
           class="col-12 col-md-8"
           :class="{ 'box-disabled': movies.loading }"
-          v-loading="movies.optionsLoading"
           :options="movies.options"
           @optionSelected="optionSelected"
         />
       </div>
     </div>
 
-    <app-alert
-      v-if="movies.requireOptions"
-      type="info"
-      :text="movies.requireOptionsMessage"
-    />
-    <div
-      v-else
-      class="container movie-container position-relative custom-scrollbar"
-      v-scroll="handleScroll"
-    >
-      <div class="row flex-nowrap">
-        <app-movie
-          v-for="movie in movies.movies"
-          :movie="movie"
-          :key="movie.id"
-        />
+    <div class="h-100">
+      <app-message-box
+        class="message-box"
+        v-if="movies.error"
+        type="danger"
+      >
+        <h4 slot="heading">{{ movies.error.title }}</h4>
+        <p slot="details">{{ movies.error.message }}</p>
+      </app-message-box>
+
+      <app-message-box
+        class="message-box"
+        v-else-if="
+          !movies.requireOptions &&
+            !movies.loading &&
+            movies.movies &&
+            movies.movies.length === 0
+        "
+      >
+        <h4 slot="heading">
+          No movies found for this resource
+        </h4>
+      </app-message-box>
+
+      <app-message-box
+        class="message-box"
+        v-else-if="movies.requireOptions"
+        type="info"
+      >
+        <h4 slot="heading">{{ movies.requireOptionsMessage }}</h4>
+      </app-message-box>
+
+      <div
+        v-else
+        class="container movie-container position-relative custom-scrollbar"
+        v-scroll="handleScroll"
+      >
+        <div class="row flex-nowrap">
+          <app-movie
+            v-for="movie in movies.movies"
+            :movie="movie"
+            :key="movie.id"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -43,7 +70,7 @@
 
 import MovieVue from "./Movie.vue";
 import ButtonToolbarVue from "../ButtonToolbar.vue";
-import AlertVue from "../Alert.vue";
+import MessageBoxVue from "../base/MessageBox.vue";
 
 import { MOVIE_LISTS } from "@/store/storeconstants";
 
@@ -60,11 +87,12 @@ export default {
   components: {
     appMovie: MovieVue,
     appButtonToolbar: ButtonToolbarVue,
-    appAlert: AlertVue
+    appMessageBox: MessageBoxVue
   },
   computed: {
     movies() {
       const movies = this.$store.getters[`${MOVIE_LISTS}/getFromMovieLists`](
+        this.resource.listType,
         this.resource.id
       );
       return movies;
@@ -107,5 +135,8 @@ export default {
   min-height: 350px;
   max-height: 530px;
   overflow-x: scroll;
+}
+.message-box {
+  min-height: 350px;
 }
 </style>

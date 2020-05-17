@@ -89,29 +89,26 @@
     </div>
     <div
       class="row"
-      v-if="movieLists && movieLists.length > 0"
+      v-if="allMovieDetailsLists"
     >
+      {}
       <app-movie-list
-        v-for="movieList in movieLists"
+        v-for="movieList in allMovieDetailsLists"
         :key="movieList.id"
         :resource="movieList"
-        :meta="{ byId: $route.params.id }"
       />
     </div>
   </div>
 </template>
 
 <script>
-import axios from "@/api";
 import { imageSrc } from "@/constants";
 import MovieListVue from "../components/MovieSection/MovieList.vue";
 import RevealVue from "../components/Reveal.vue";
 import DetailReviewVue from "../components/DetailReview.vue";
 
-const initialMovieLists = [
-  { id: "similar", name: "Similar movies to this movie" },
-  { id: "recommended", name: "Recommended movies for this movie " }
-];
+import { MOVIE_LISTS, MOVIE_DETAILS } from "@/store/storeconstants";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -121,78 +118,48 @@ export default {
   },
   data() {
     return {
-      movie: null,
-      loading: false,
-      imageSrc,
-      movieLists: null,
-      reviews: null,
-      reviewsLoading: false
+      imageSrc
     };
+  },
+  computed: {
+    ...mapGetters(MOVIE_LISTS, ["allMovieDetailsLists"]),
+    ...mapGetters(MOVIE_DETAILS, [
+      "movieId",
+      "movie",
+      "loading",
+      "reviews",
+      "reviewsLoading"
+    ]),
+    id() {
+      return this.$route.params.id;
+    }
   },
   watch: {
     $route(to, from) {
-      if (to !== from) this.initialLoad();
+      if (to !== from) {
+        console.log("TO FROM");
+        this.initializeId();
+        this.getMovieDetails();
+      }
     }
   },
   methods: {
     getMovieDetails() {
-      const { id } = this.$route.params;
-      this.loading = true;
-      return axios
-        .get(`/movie/${id}`)
-        .then(({ data }) => {
-          this.loading = false;
-
-          if (data.release_date) {
-            data.release_date = new Date(data.release_date).getFullYear();
-          }
-          if (data.runtime) {
-            if (data.runtime / 60 > 1)
-              data.runtime = `${Math.floor(data.runtime / 60)}h ${data.runtime %
-                60}min`;
-            else data.runtime = `${data.runtime}min`;
-          }
-
-          if (data.spoken_languages)
-            data.spoken_languages = data.spoken_languages
-              .map(language => language.name)
-              .join(", ");
-
-          if (data.production_companies)
-            data.production_companies = data.production_companies.slice(0, 4);
-
-          this.movie = data;
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      this.$store.dispatch(`${MOVIE_DETAILS}/getMovieDetails`);
     },
     getReviews() {
-      const { id } = this.$route.params;
-      this.reviewsLoading = true;
-      console.log(this.reviewsLoading);
-      setTimeout(() => {
-        axios
-          .get(`/movie/${id}/reviews`)
-          .then(response => {
-            this.reviewsLoading = false;
-            this.reviews = response.data.results;
-            console.log(response);
-          })
-          .catch(err => {
-            this.reviewsLoading = false;
-            console.log(err);
-          });
-      }, 3000);
+      this.$store.dispatch(`${MOVIE_DETAILS}/getMovieDetailsReviews`);
     },
-    async initialLoad() {
-      await this.getMovieDetails();
-      this.movieLists = initialMovieLists;
-      if (this.reviews) this.getReviews();
+    initializeId() {
+      this.$store.dispatch(`${MOVIE_LISTS}/setMovieDetailsId`, this.id);
+      this.$store.dispatch(`${MOVIE_DETAILS}/setMovieDetailId`, this.id);
     }
   },
+  created() {
+    this.initializeId();
+  },
   mounted() {
-    this.initialLoad();
+    this.getMovieDetails();
   }
 };
 </script>
