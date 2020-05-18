@@ -7,7 +7,9 @@
       type="button"
       class="btn mr-1 mb-1"
       :class="[
-        selectedId === option.id ? 'btn-success' : 'btn-outline-dark',
+        (option.preselected && !selectedId) || selectedId === option.id
+          ? 'btn-success animate__animated animate__flash'
+          : 'btn-outline-dark',
         `btn-${buttonSize}`
       ]"
     >

@@ -6,10 +6,7 @@
       :resource="resource"
     />
 
-    <div
-      class="m-5"
-      v-if="allPassiveMovieListsArray.length > 0"
-    >
+    <div class="m-5 text-center" v-if="allPassiveMovieListsArray.length > 0">
       <h2>
         Want more? See other categories
       </h2>
@@ -24,30 +21,39 @@
 </template>
 
 <script>
-import MovieListVue from "../components/MovieSection/MovieList.vue";
-import ButtonToolbarVue from "../components/ButtonToolbar.vue";
+import MovieListVue from '../components/MovieSection/MovieList.vue';
+import ButtonToolbarVue from '../components/ButtonToolbar.vue';
 
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
 
-import { MOVIE_LISTS } from "@/store/storeconstants";
+import { MOVIE_LISTS } from '@/store/storeconstants';
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     appMovieList: MovieListVue,
-    appButtonToolbar: ButtonToolbarVue
+    appButtonToolbar: ButtonToolbarVue,
   },
   computed: {
     ...mapGetters(MOVIE_LISTS, [
-      "allMovieLists",
-      "allPassiveMovieLists",
-      "allPassiveMovieListsArray"
-    ])
+      'allMovieLists',
+      'allPassiveMovieLists',
+      'allPassiveMovieListsArray',
+    ]),
   },
   methods: {
     insertNewMovieSection($e) {
       this.$store.dispatch(`${MOVIE_LISTS}/moveFromPassive`, $e);
-    }
-  }
+    },
+  },
 };
 </script>
+
+<style lang="scss" scoped>
+.overlay-panel {
+  position: fixed;
+  top: 70px;
+  z-index: 100;
+  min-height: 400px;
+}
+</style>

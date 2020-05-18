@@ -1,5 +1,5 @@
 <template>
-  <div class="container my-4">
+  <div class="container my-4 animate__animated animate__fadeIn">
     <div
       class="container my-2"
       v-loading="movies.loading"
@@ -53,7 +53,7 @@
         class="container movie-container position-relative custom-scrollbar"
         v-scroll="handleScroll"
       >
-        <div class="row flex-nowrap">
+        <div class="row flex-nowrap ">
           <app-movie
             v-for="movie in movies.movies"
             :movie="movie"

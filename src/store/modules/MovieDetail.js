@@ -7,7 +7,6 @@ export default {
   state: INITIAL_STATE,
   getters: {
     movie: (state) => {
-      console.log(state.movie, ' GETTER');
       return state.movie;
     },
     movieId: (state) => state.movieId,
@@ -64,7 +63,6 @@ export default {
 
         if (state.reviews) dispatch('getMovieDetailsReviews');
       } catch (err) {
-        console.log(err);
         commit('setLoading', false);
       }
     },
@@ -77,7 +75,6 @@ export default {
         commit('setReviews', reviews.data.results);
         commit('setReviewsLoading', false);
       } catch (err) {
-        console.log(err);
         commit('setReviewsLoading', false);
       }
     },

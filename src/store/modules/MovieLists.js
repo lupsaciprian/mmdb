@@ -9,6 +9,7 @@ export default {
     allMovieLists: (state) => state.movieLists,
     allPassiveMovieLists: (state) => state.passiveMovieList,
     allMovieDetailsLists: (state) => state.movieDetailLists,
+    searchMovieList: (state) => state.searchResults.search,
 
     allPassiveMovieListsArray: (state) =>
       Object.keys(state.passiveMovieList).map(
@@ -77,8 +78,10 @@ export default {
     },
 
     initializeMovieList: ({ commit, dispatch, state }, payload) => {
+      if (payload.mode) {
+        console.log('PAYLOAD', payload);
+      }
       payload = { ...payload, ...COMPONENT_INITIAL };
-
       switch (payload.id) {
         case 'trending':
           payload.requestUrl = `/trending/movie/day`;
@@ -99,14 +102,18 @@ export default {
           break;
         case 'latestseries':
           // payload :)
-          payload.latestSeries = '/tv/airing_today';
+          payload.requestUrl = '/tv/airing_today';
           break;
         case 'similar':
           payload.requestUrl = `/movie/${state.movieDetailsId}/similar`;
           break;
         case 'recommended':
-          // /movie/${payload.meta.byId}/recommendations
           payload.requestUrl = `/movie/${state.movieDetailsId}/recommendations`;
+          break;
+        case 'search':
+          if (!payload.params) return;
+          if (payload.mode === 'movie') payload.requestUrl = '/search/movie';
+          if (payload.mode === 'tvseries') payload.requestUrl = '/search/tv';
           break;
       }
 
@@ -117,7 +124,6 @@ export default {
     populateMovieList: async ({ commit, state }, payload) => {
       const { id, listType } = payload;
       const list = state[listType][id];
-      console.log('Payload for', payload);
 
       const handleError = (err) => {
         commit('setProperty', {
@@ -143,10 +149,14 @@ export default {
         toUpdate: { loading: true },
       });
 
-      if (!list.requireOption) {
+      if (!list.requireOptions) {
+        let params = {
+          ...list.params,
+          page: payload.page ? payload.page : list.page,
+        };
         try {
           const res = await axios.get(list.requestUrl, {
-            params: { page: payload.page },
+            params,
           });
           commit('setProperty', {
             id,
@@ -204,9 +214,18 @@ export default {
       commit('resetMovieProp', payload);
     },
 
-    setMovieDetailsId: ({ commit }, payload) => {
-      console.log('Set movie details id: ', payload);
-      commit('setMovieDetailsId', payload);
+    setMovieDetailsId: ({ commit, state, dispatch }, payload) => {
+      if (payload !== state.movieDetailsId) {
+        commit('setMovieDetailsId', payload);
+
+        // Reset all movie details movie lists
+        Object.keys(state.movieDetailLists).forEach((listKey) => {
+          dispatch('initializeMovieList', {
+            listType: 'movieDetailLists',
+            id: listKey,
+          });
+        });
+      }
     },
   },
 };

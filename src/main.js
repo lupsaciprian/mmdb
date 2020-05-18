@@ -3,6 +3,7 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import VueLazyload from 'vue-lazyload';
+import vueSmoothScroll from 'vue2-smooth-scroll';
 
 // Style
 import './style.scss';
@@ -10,14 +11,9 @@ import './style.scss';
 import loading from '@/directives/loading';
 import scroll from '@/directives/scroll';
 
-import appSpinnerButton from '@/components/base/SpinnerButton.vue';
-
 // Global Directives
 Vue.directive('loading', loading);
 Vue.directive('scroll', scroll);
-
-// Global Components
-Vue.component('appSpinnerButton', appSpinnerButton);
 
 Vue.config.productionTip = false;
 
@@ -35,6 +31,7 @@ Vue.use(VueLazyload, {
     threshold: 0.1,
   },
 });
+Vue.use(vueSmoothScroll);
 
 new Vue({
   router,

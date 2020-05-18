@@ -1,9 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { MOVIE_LISTS, MOVIE_DETAILS } from '@/store/storeconstants';
+import {
+  MOVIE_LISTS,
+  MOVIE_DETAILS,
+  SEARCH,
+  LOGIN,
+} from '@/store/storeconstants';
 
 import movieLists from './modules/MovieLists';
 import movieDetails from './modules/MovieDetail';
+import search from './modules/Search';
+import login from './modules/Login';
 
 console.log(MOVIE_LISTS);
 
@@ -21,6 +28,14 @@ export default new Vuex.Store({
     [MOVIE_DETAILS]: {
       namespaced: true,
       ...movieDetails,
+    },
+    [SEARCH]: {
+      namespaced: true,
+      ...search,
+    },
+    [LOGIN]: {
+      namespaced: true,
+      ...login,
     },
   },
 });

@@ -20,7 +20,6 @@ export default {
   },
   methods: {
     markContainerColors() {
-      console.log("type", this.type);
       if (this.type === "danger") return ["text-white", "bg-danger"];
       if (this.type === "info") return ["text-white", "bg-info"];
       if (this.type === "default") return ["text-dark", "bg-light"];

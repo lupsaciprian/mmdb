@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
+    path: '/:redirect?',
     name: 'Home',
     component: Home,
   },
@@ -25,8 +25,7 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
-  scrollBehavior(to, from) {
-    console.log(to, from, 'SAME ROUTE GO SCROLL');
+  scrollBehavior() {
     return { x: 0, y: 0 };
   },
 });

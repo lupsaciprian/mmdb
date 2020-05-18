@@ -52,12 +52,19 @@
                 <div
                   v-for="company in movie.production_companies"
                   :key="company.id"
-                  class="col-6 col-sm-6 col-md-3 d-flex align-items-center mb-4"
+                  class="col-6 col-sm-6 col-md-3 d-flex align-items-center mb-4 justify-content-center"
                 >
                   <img
+                    v-if="company.logo_path"
                     v-lazy="imageSrc + company.logo_path"
                     class="card-img"
                   />
+                  <span
+                    v-else
+                    class="font-weight-bold"
+                  >{{
+                    company.name
+                  }}</span>
                 </div>
               </div>
             </div>
@@ -68,12 +75,13 @@
           @revealFired="getReviews"
           :contentId="'reviews'"
           v-loading="reviewsLoading"
+          fallbackText="No reviews for this movie"
         >
           <template>Show reviews</template>
           <div
-            v-if="reviews"
+            v-if="reviews.length > 0"
             slot="content"
-            class="card"
+            class="card animate__animated animate__fadeIn"
           >
             <h3 class="my-2 p-4 text-left card-title">Reviews</h3>
             <div class="card-body">
@@ -91,7 +99,6 @@
       class="row"
       v-if="allMovieDetailsLists"
     >
-      {}
       <app-movie-list
         v-for="movieList in allMovieDetailsLists"
         :key="movieList.id"
@@ -137,7 +144,6 @@ export default {
   watch: {
     $route(to, from) {
       if (to !== from) {
-        console.log("TO FROM");
         this.initializeId();
         this.getMovieDetails();
       }

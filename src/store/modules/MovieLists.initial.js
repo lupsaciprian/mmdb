@@ -38,6 +38,13 @@ export const INITIAL_STATE = {
       listType: 'movieDetailLists',
     },
   },
+  searchResults: {
+    search: {
+      id: 'search',
+      name: 'Search results',
+      listType: 'searchResults',
+    },
+  },
 };
 
 export const COMPONENT_INITIAL = {

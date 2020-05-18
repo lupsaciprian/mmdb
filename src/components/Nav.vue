@@ -1,55 +1,69 @@
 <template>
-  <nav class="navbar navbar-light bg-white sticky-top">
-    <router-link to="/"><h1>My Movie Database</h1></router-link>
-    <form @submit.prevent="search" class="form-inline">
-      <input
-        v-model="searchInput"
-        class="form-control mr-sm-2"
-        type="search"
-        placeholder="Search"
-        aria-label="Search"
-      />
-      <button
-        class="btn btn-outline-success my-2 my-sm-0 mr-sm-2"
-        type="submit"
-      >
-        Search
-      </button>
+  <nav class="navbar navbar-light bg-white fixed-top">
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <router-link
+          class="nav-link  active"
+          to="/"
+        >
+          Dashboard
+        </router-link>
+      </li>
+      <li class="nav-item">
+        <router-link
+          class="nav-link"
+          to="/"
+        >
+          My Account
+        </router-link>
+      </li>
+    </ul>
 
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarToggleExternalContent"
-        aria-controls="navbarToggleExternalContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </form>
+    <app-search />
 
-    <div class="collapse" id="navbarToggleExternalContent">
-      <div class="bg-dark p-4">
-        <h5 class="text-white h4">Collapsed content</h5>
-        <span class="text-muted">Toggleable via the navbar brand.</span>
-      </div>
+    <app-spinner-button
+      v-if="!loginIsLoggedIn"
+      @click.native="setLoginActive"
+      :isLoading="loginLoading"
+      classes="btn btn-primary"
+    >Login</app-spinner-button>
+
+    <div v-if="loginIsLoggedIn && loginUserData">
+      <a class="mr-2 font-weight-bold text-primary">{{
+        loginUserData.username
+      }}</a>
+      <button
+        @click="logout"
+        class="btn btn-danger"
+      >Logout</button>
     </div>
   </nav>
 </template>
 
 <script>
+import { LOGIN, SEARCH } from "@/store/storeconstants";
+import { mapGetters } from "vuex";
+
+import SearchBoxVue from "./SearchBox.vue";
+import SpinnerButtonVue from "./base/SpinnerButton.vue";
+
 export default {
-  data() {
-    return {
-      searchInput: '',
-    };
+  components: {
+    appSearch: SearchBoxVue,
+    appSpinnerButton: SpinnerButtonVue
+  },
+  computed: {
+    ...mapGetters(LOGIN, ["loginLoading", "loginIsLoggedIn", "loginUserData"])
   },
   methods: {
-    search($e) {
-      console.log($e, this.searchInput);
+    setLoginActive() {
+      this.$store.dispatch(`${SEARCH}/toggleActive`, false);
+      this.$store.dispatch(`${LOGIN}/toggleActive`, true);
     },
-  },
+    logout() {
+      this.$store.dispatch(`${LOGIN}/logout`);
+    }
+  }
 };
 </script>
 
