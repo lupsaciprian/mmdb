@@ -10,6 +10,7 @@ export default {
     allPassiveMovieLists: (state) => state.passiveMovieList,
     allMovieDetailsLists: (state) => state.movieDetailLists,
     searchMovieList: (state) => state.searchResults.search,
+    userMovieList: (state) => state.user,
 
     allPassiveMovieListsArray: (state) =>
       Object.keys(state.passiveMovieList).map(
@@ -78,10 +79,8 @@ export default {
     },
 
     initializeMovieList: ({ commit, dispatch, state }, payload) => {
-      if (payload.mode) {
-        console.log('PAYLOAD', payload);
-      }
       payload = { ...payload, ...COMPONENT_INITIAL };
+
       switch (payload.id) {
         case 'trending':
           payload.requestUrl = `/trending/movie/day`;
@@ -115,6 +114,11 @@ export default {
           if (payload.mode === 'movie') payload.requestUrl = '/search/movie';
           if (payload.mode === 'tvseries') payload.requestUrl = '/search/tv';
           break;
+        case 'rated':
+        case 'watchlist':
+        case 'favorite':
+          if (!payload.paths || !payload.params) return;
+          payload.requestUrl = `/account/${payload.paths.userId}/${payload.id}/movies`;
       }
 
       commit('initializeMovieList', payload);
@@ -215,17 +219,31 @@ export default {
     },
 
     setMovieDetailsId: ({ commit, state, dispatch }, payload) => {
-      if (payload !== state.movieDetailsId) {
-        commit('setMovieDetailsId', payload);
-
+      if (state.movieDetailsId && payload !== state.movieDetailsId) {
         // Reset all movie details movie lists
+        // The order is important for setMoviesDetailsId!
+        commit('setMovieDetailsId', payload);
         Object.keys(state.movieDetailLists).forEach((listKey) => {
           dispatch('initializeMovieList', {
             listType: 'movieDetailLists',
             id: listKey,
           });
         });
+      } else {
+        commit('setMovieDetailsId', payload);
       }
+    },
+
+    getUserMovieLists({ dispatch, state }, payload) {
+      console.log('ML GETUSER', payload);
+      Object.keys(state.user).forEach((userMovieListKey) => {
+        dispatch('initializeMovieList', {
+          listType: 'user',
+          id: userMovieListKey,
+          paths: { userId: payload.userId },
+          params: { session_id: payload.token },
+        });
+      });
     },
   },
 };

@@ -45,6 +45,23 @@ export const INITIAL_STATE = {
       listType: 'searchResults',
     },
   },
+  user: {
+    rated: {
+      id: 'rated',
+      name: 'Movies rated by you',
+      listType: 'user',
+    },
+    watchlist: {
+      id: 'watchlist',
+      name: 'Movies in your watchlist',
+      listType: 'user',
+    },
+    favorite: {
+      id: 'favorite',
+      name: 'Your favorite movies',
+      listType: 'user',
+    },
+  },
 };
 
 export const COMPONENT_INITIAL = {

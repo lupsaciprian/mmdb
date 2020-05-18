@@ -13,6 +13,7 @@ export default {
     loading: (state) => state.loading,
     reviews: (state) => state.reviews,
     reviewsLoading: (state) => state.reviewsLoading,
+    userActions: (state) => state.userActions,
   },
   mutations: {
     setMovie: (state, payload) => {

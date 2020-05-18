@@ -4,6 +4,11 @@ import Home from '../views/Home.vue';
 
 Vue.use(VueRouter);
 
+const MovieDetails = () =>
+  import(/* webpackChunkName: "details" */ '../views/MovieDetails.vue');
+const Account = () =>
+  import(/* webpackChunkName: "account" */ '../views/Account.vue');
+
 const routes = [
   {
     path: '/:redirect?',
@@ -13,11 +18,12 @@ const routes = [
   {
     path: '/details/:id',
     name: 'Movie Details',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "details" */ '../views/MovieDetails.vue'),
+    component: MovieDetails,
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    component: Account,
   },
 ];
 

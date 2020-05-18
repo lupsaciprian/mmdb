@@ -5,12 +5,13 @@
       @click="select(option)"
       :key="option.id"
       type="button"
-      class="btn mr-1 mb-1"
+      :disabled="option.disabled"
       :class="[
         (option.preselected && !selectedId) || selectedId === option.id
           ? 'btn-success animate__animated animate__flash'
           : 'btn-outline-dark',
-        `btn-${buttonSize}`
+        `btn-${buttonSize}`,
+        classes
       ]"
     >
       {{ option.name }}
@@ -28,6 +29,10 @@ export default {
     buttonSize: {
       type: String,
       default: "sm"
+    },
+    classes: {
+      type: String,
+      default: "btn mr-1 mb-1"
     }
   },
   data() {
@@ -37,6 +42,7 @@ export default {
   },
   methods: {
     select(option) {
+      console.log(option);
       if (this.selectedId !== option.id) {
         this.selectedId = option.id;
         this.$emit("optionSelected", option);

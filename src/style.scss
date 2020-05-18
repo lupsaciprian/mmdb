@@ -45,3 +45,8 @@
   background-color: #6c757d;
   // background-image: linear-gradient(to top, #ccc 0%, #007bff 100%);
 }
+
+.router-link-exact-active {
+  background-color: #007bff;
+  color: #fff;
+}

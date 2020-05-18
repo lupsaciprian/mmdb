@@ -3,7 +3,7 @@
     <ul class="nav nav-pills">
       <li class="nav-item">
         <router-link
-          class="nav-link  active"
+          class="nav-link"
           to="/"
         >
           Dashboard
@@ -12,7 +12,9 @@
       <li class="nav-item">
         <router-link
           class="nav-link"
-          to="/"
+          v-if="loginIsLoggedIn"
+          :to="{ name: 'Account', exact: true }"
+          exact
         >
           My Account
         </router-link>

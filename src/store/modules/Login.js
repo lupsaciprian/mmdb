@@ -1,6 +1,7 @@
 import axios from '@/api';
 
 import INITIAL_STATE from './Login.initial';
+import { MOVIE_LISTS } from '@/store/storeconstants';
 
 export default {
   state: INITIAL_STATE,
@@ -10,6 +11,9 @@ export default {
     loginError: (state) => state.error,
     loginIsLoggedIn: (state) => state.isLoggedIn,
     loginUserData: (state) => state.user,
+    loginUserActions: (state) => state.userActions,
+    loginUserActionsLoading: (state) => state.userActionsLoading,
+    loginToken: (state) => state.token,
   },
   mutations: {
     setActive(state, payload) {
@@ -17,6 +21,9 @@ export default {
     },
     setLoading(state, payload) {
       state.loading = payload;
+    },
+    setActionsLoading(state, payload) {
+      state.userActionsLoading = payload;
     },
     setError(state, payload) {
       state.loading = false;
@@ -47,6 +54,12 @@ export default {
     },
     setUser(state, payload) {
       state.user = payload;
+    },
+    updateAction(state, payload) {
+      // Simply replacing the payload item with the corresponding action did not trigger change detection
+      state.userActions = state.userActions.map((action) =>
+        action.id === payload.id ? payload : action
+      );
     },
   },
   actions: {
@@ -144,6 +157,59 @@ export default {
       } catch (e) {
         commit('setError', e.response);
       }
+    },
+
+    loggedInUserAction: async ({ commit, state }, payload) => {
+      console.log(commit, payload);
+      let url, body, message;
+      switch (payload.action.id) {
+        case 'rate':
+          return;
+        default:
+          url = `/account/${payload.userId}/${payload.action.id}`;
+          body = {
+            media_type: 'movie',
+            media_id: payload.movieId,
+            [payload.action.id]: true,
+          };
+          message = `Added to ${payload.action.id} successfully.`;
+      }
+
+      commit('setActionsLoading', true);
+      try {
+        const response = await axios.post(url, body, {
+          params: {
+            session_id: state.token,
+          },
+        });
+        console.log(response);
+        commit('setActionsLoading', false);
+        commit('updateAction', {
+          id: payload.action.id,
+          name: message,
+          disabled: true,
+        });
+      } catch (e) {
+        commit('setActionsLoading', false);
+        commit('updateAction', {
+          id: payload.action.id,
+          name: `Error setting this action.`,
+        });
+      }
+    },
+
+    getUserMovieLists({ dispatch, state }) {
+      console.log('GETTERS');
+      dispatch(
+        `${MOVIE_LISTS}/initializeMovieList`,
+        {
+          listType: 'user',
+          id: 'watchlist',
+          paths: { userId: state.user.id },
+          params: { session_id: state.token },
+        },
+        { root: true }
+      );
     },
   },
 };

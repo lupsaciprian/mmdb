@@ -13,14 +13,24 @@
             <h1>{{ movie.title }} ({{ movie.release_date }})</h1>
             <img
               v-lazy="imageSrc + movie.poster_path"
-              class="card-img"
+              class="card-img my-2"
               alt=""
+            />
+
+            <app-button-toolbar
+              @optionSelected="loggedUserAction"
+              v-if="loginIsLoggedIn"
+              :options="loginUserActions"
+              classes="btn btn-block"
             />
           </div>
         </div>
       </div>
 
-      <div class="col-12 col-md-8 description-panel">
+      <div class="
+              col-12
+              col-md-8
+              description-panel">
         <div class="card">
           <div class="card-body text-left card-info">
             <h3>About this movie</h3>
@@ -114,14 +124,16 @@ import MovieListVue from "../components/MovieSection/MovieList.vue";
 import RevealVue from "../components/Reveal.vue";
 import DetailReviewVue from "../components/DetailReview.vue";
 
-import { MOVIE_LISTS, MOVIE_DETAILS } from "@/store/storeconstants";
+import { MOVIE_LISTS, MOVIE_DETAILS, LOGIN } from "@/store/storeconstants";
 import { mapGetters } from "vuex";
+import ButtonToolbarVue from "../components/ButtonToolbar.vue";
 
 export default {
   components: {
     appMovieList: MovieListVue,
     appReveal: RevealVue,
-    appDetailReview: DetailReviewVue
+    appDetailReview: DetailReviewVue,
+    appButtonToolbar: ButtonToolbarVue
   },
   data() {
     return {
@@ -137,6 +149,11 @@ export default {
       "reviews",
       "reviewsLoading"
     ]),
+    ...mapGetters(LOGIN, [
+      "loginIsLoggedIn",
+      "loginUserData",
+      "loginUserActions"
+    ]),
     id() {
       return this.$route.params.id;
     }
@@ -144,6 +161,7 @@ export default {
   watch: {
     $route(to, from) {
       if (to !== from) {
+        console.log("ROUTE CHANGED??");
         this.initializeId();
         this.getMovieDetails();
       }
@@ -159,6 +177,13 @@ export default {
     initializeId() {
       this.$store.dispatch(`${MOVIE_LISTS}/setMovieDetailsId`, this.id);
       this.$store.dispatch(`${MOVIE_DETAILS}/setMovieDetailId`, this.id);
+    },
+    loggedUserAction(action) {
+      this.$store.dispatch(`${LOGIN}/loggedInUserAction`, {
+        action,
+        userId: this.loginUserData.id,
+        movieId: this.movieId
+      });
     }
   },
   created() {

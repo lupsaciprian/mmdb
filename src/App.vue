@@ -21,6 +21,7 @@
     >
       <div
         v-if="decideOverlay()"
+        :style="{ top: navbarHeight }"
         class="overlay-panel bg-white w-100 border p-2"
       >
         <component :is="decideOverlay()"></component>
@@ -63,7 +64,7 @@ export default {
       if (this.loginActive) return "appLogin";
     },
     getNavbarHeight() {
-      this.navbarHeight = this.$refs.navbar.$el.clientHeight + 10 + "px";
+      this.navbarHeight = this.$refs.navbar.$el.clientHeight + "px";
       console.log(this.navbarHeight);
     }
   },
@@ -84,7 +85,6 @@ export default {
 <style lang="scss" scoped>
 .overlay-panel {
   position: fixed;
-  top: 70px;
   z-index: 100;
   min-height: 300px;
 }
