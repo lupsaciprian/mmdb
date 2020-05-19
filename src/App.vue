@@ -10,8 +10,8 @@
 
     <transition
       name="overlay-panel"
-      enter-active-class="animate__animated animate__fadeInRightBig"
-      leave-active-class="animate__animated animate__fadeOutRightBig"
+      enter-active-class="animate__animated animate__fadeInRightBig animate__faster"
+      leave-active-class="animate__animated animate__fadeOutRightBig animate__faster"
     >
       <div
         v-if="decideOverlay()"
@@ -31,50 +31,62 @@
 </template>
 
 <script>
-import NavVue from "./components/Nav.vue";
+import NavVue from './components/Nav/Nav.vue';
 
-import { mapGetters } from "vuex";
-import { SEARCH, LOGIN } from "@/store/storeconstants";
+import { mapGetters } from 'vuex';
+import { LOGIN } from '@/store/storeconstants';
 
 export default {
+  // Lazy loaded components
   components: {
     appNav: NavVue,
-    appSearchResults: () => import("./components/SearchResults"),
-    appLogin: () => import("./components/Login")
+    appNavMobile: () => import('./components/Nav/NavMobile'),
+    appSearchResults: () => import('./components/Search/SearchResults'),
+    appLogin: () => import('./components/Login'),
   },
   data() {
-    return { navbarHeight: "0px" };
+    return { navbarHeight: '0px' };
   },
   computed: {
-    ...mapGetters(SEARCH, ["searchActive"]),
-    ...mapGetters(LOGIN, ["loginActive", "loginLoading"])
+    ...mapGetters(['activeDropdown']),
+    ...mapGetters(LOGIN, ['loginLoading']),
   },
   watch: {
     $route() {
-      this.$store.dispatch(`${SEARCH}/toggleActive`, false);
-    }
+      this.$store.dispatch('setActiveDropdown', null);
+    },
   },
   methods: {
     decideOverlay() {
-      if (this.searchActive) return "appSearchResults";
-      if (this.loginActive) return "appLogin";
+      // return 'appNavMobile';
+      switch (this.activeDropdown) {
+        case 'login':
+          return 'appLogin';
+        case 'search':
+          return 'appSearchResults';
+        case 'mobile_dropdown':
+          return 'appNavMobile';
+        default:
+          return null;
+      }
     },
     getNavbarHeight() {
-      this.navbarHeight = this.$refs.navbar.$el.clientHeight + "px";
-      console.log(this.navbarHeight);
-    }
+      this.navbarHeight = this.$refs.navbar.$el.clientHeight + 'px';
+    },
   },
   mounted() {
     this.getNavbarHeight();
+    this.$store.dispatch('setMobile', window.innerWidth);
+
     const { path, query } = this.$route;
-    if (path === "/redirected") {
+    if (path === '/redirected') {
       this.$store.dispatch(`${LOGIN}/hasBeenRedirected`, {
         approved: query.approved,
-        request_token: query.request_token
+        request_token: query.request_token,
       });
-      this.$router.push({ path: "/" });
+      this.$router.push({ path: '/' });
     }
-  }
+  },
 };
 </script>
 

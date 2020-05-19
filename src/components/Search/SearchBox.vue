@@ -2,11 +2,11 @@
   <form @submit.prevent="search" class="form-inline">
     <input
       v-model="searchInput"
+      id="searchInput"
       class="form-control mr-sm-2"
       type="search"
       placeholder="Search"
       aria-label="Search"
-      style="width: 30vw"
     />
     <button
       :disabled="searchInput === ''"
@@ -19,25 +19,28 @@
 </template>
 
 <script>
-import { SEARCH, LOGIN } from "@/store/storeconstants";
+import { SEARCH } from '@/store/storeconstants';
 
 export default {
   data() {
     return {
-      searchInput: ""
+      searchInput: '',
     };
   },
   methods: {
     search() {
       const { dispatch } = this.$store;
-      dispatch(`${LOGIN}/toggleActive`, false);
-      dispatch(`${SEARCH}/toggleActive`, true);
+      dispatch('setActiveDropdown', 'search');
       dispatch(`${SEARCH}/setSearchKeyword`, this.searchInput);
 
       dispatch(`${SEARCH}/getSearchMovieList`);
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style></style>
+<style scoped lang="scss">
+#searchInput {
+  width: 30vw;
+}
+</style>

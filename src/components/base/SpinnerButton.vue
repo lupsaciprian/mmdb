@@ -1,5 +1,5 @@
 <template>
-  <button :class="classes" type="button" :disabled="isLoading">
+  <button :class="classes" type="button" :disabled="isLoading || disabled">
     <span
       v-if="isLoading"
       class="spinner-border spinner-border-sm mr-2"
@@ -16,13 +16,17 @@ export default {
   props: {
     isLoading: {
       type: Boolean,
-      required: true
+      required: true,
     },
     classes: {
       type: String,
-      default: "btn btn-primary btn-lg btn-block"
-    }
-  }
+      default: 'btn btn-primary btn-lg btn-block',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
 };
 </script>
 

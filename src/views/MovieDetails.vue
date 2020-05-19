@@ -13,8 +13,9 @@
 
             <app-button-toolbar
               @optionSelected="loggedUserAction"
+              :isLoading="loginUserActionsLoading"
               v-if="loginIsLoggedIn"
-              :options="loginUserActions"
+              :options="loginUserActionsLeft"
               classes="btn btn-block"
             />
           </div>
@@ -31,7 +32,7 @@
           <div class="card-body text-left card-info">
             <h3>About this movie</h3>
             <div class="description-box  border-left bw-4 border-success pl-4">
-              <p>{{ movie.overview }}</p>
+              <p class="text-muted">{{ movie.overview }}</p>
 
               <span class="badge badge-primary mr-1">{{ movie.runtime }}</span>
               <span
@@ -113,44 +114,45 @@
 </template>
 
 <script>
-import MovieListVue from "../components/MovieSection/MovieList.vue";
-import RevealVue from "../components/Reveal.vue";
-import DetailReviewVue from "../components/DetailReview.vue";
-import RateMovieVue from "../components/RateMovie.vue";
+import MovieListVue from '../components/MovieSection/MovieList.vue';
+import RevealVue from '../components/Reveal.vue';
+import DetailReviewVue from '../components/DetailReview.vue';
+import RateMovieVue from '../components/RateMovie.vue';
 
-import { MOVIE_LISTS, MOVIE_DETAILS, LOGIN } from "@/store/storeconstants";
-import { mapGetters } from "vuex";
-import { imageSrc } from "@/constants";
+import { MOVIE_LISTS, MOVIE_DETAILS, LOGIN } from '@/store/storeconstants';
+import { mapGetters } from 'vuex';
+import { imageSrc } from '@/config/constants';
 
 export default {
   components: {
     appMovieList: MovieListVue,
     appReveal: RevealVue,
     appDetailReview: DetailReviewVue,
-    appRateMovie: RateMovieVue
+    appRateMovie: RateMovieVue,
   },
   data() {
     return {
-      imageSrc
+      imageSrc,
     };
   },
   computed: {
-    ...mapGetters(MOVIE_LISTS, ["allMovieDetailsLists"]),
+    ...mapGetters(MOVIE_LISTS, ['allMovieDetailsLists']),
     ...mapGetters(MOVIE_DETAILS, [
-      "movieId",
-      "movie",
-      "loading",
-      "reviews",
-      "reviewsLoading"
+      'movieId',
+      'movie',
+      'loading',
+      'reviews',
+      'reviewsLoading',
     ]),
     ...mapGetters(LOGIN, [
-      "loginIsLoggedIn",
-      "loginUserData",
-      "loginUserActions"
+      'loginIsLoggedIn',
+      'loginUserData',
+      'loginUserActionsLeft',
+      'loginUserActionsLoading',
     ]),
     id() {
       return this.$route.params.id;
-    }
+    },
   },
   watch: {
     $route(to, from) {
@@ -159,7 +161,7 @@ export default {
         this.initializeId();
         this.getMovieDetails();
       }
-    }
+    },
   },
   methods: {
     getMovieDetails() {
@@ -176,16 +178,16 @@ export default {
       this.$store.dispatch(`${LOGIN}/loggedInUserAction`, {
         action,
         userId: this.loginUserData.id,
-        movieId: this.movieId
+        movieId: this.movieId,
       });
-    }
+    },
   },
   created() {
     this.initializeId();
   },
   mounted() {
     this.getMovieDetails();
-  }
+  },
 };
 </script>
 

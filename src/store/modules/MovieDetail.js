@@ -1,19 +1,18 @@
 // import { MOVIE_LISTS } from '@/store/storeconstants';
-import { INITIAL_STATE } from "./MovieDetail.initial";
+import { INITIAL_STATE } from './MovieDetail.initial';
 
-import axios from "@/api";
+import axios from '@/config/api';
 
 export default {
   state: { ...INITIAL_STATE },
   getters: {
-    movie: state => {
+    movie: (state) => {
       return state.movie;
     },
-    movieId: state => state.movieId,
-    loading: state => state.loading,
-    reviews: state => state.reviews,
-    reviewsLoading: state => state.reviewsLoading,
-    userActions: state => state.userActions
+    movieId: (state) => state.movieId,
+    loading: (state) => state.loading,
+    reviews: (state) => state.reviews,
+    reviewsLoading: (state) => state.reviewsLoading,
   },
   mutations: {
     setMovie: (state, payload) => {
@@ -30,11 +29,11 @@ export default {
     },
     setReviewsLoading: (state, payload) => {
       state.reviewsLoading = payload;
-    }
+    },
   },
   actions: {
     getMovieDetails: async ({ commit, dispatch, state }) => {
-      commit("setLoading", true);
+      commit('setLoading', true);
 
       try {
         const details = await axios.get(`/movie/${state.movieId}`);
@@ -52,36 +51,36 @@ export default {
 
         if (data.spoken_languages)
           data.spoken_languages = data.spoken_languages
-            .map(language => language.name)
-            .join(", ");
+            .map((language) => language.name)
+            .join(', ');
 
         if (data.production_companies)
           data.production_companies = data.production_companies.slice(0, 4);
 
-        commit("setMovie", data);
-        commit("setLoading", false);
-        commit("setReviews", []);
+        commit('setMovie', data);
+        commit('setLoading', false);
+        commit('setReviews', []);
 
-        if (state.reviews) dispatch("getMovieDetailsReviews");
+        if (state.reviews) dispatch('getMovieDetailsReviews');
       } catch (err) {
-        commit("setLoading", false);
+        commit('setLoading', false);
       }
     },
 
     getMovieDetailsReviews: async ({ commit, state }) => {
-      commit("setReviewsLoading", true);
+      commit('setReviewsLoading', true);
 
       try {
         const reviews = await axios.get(`/movie/${state.movieId}/reviews`);
-        commit("setReviews", reviews.data.results);
-        commit("setReviewsLoading", false);
+        commit('setReviews', reviews.data.results);
+        commit('setReviewsLoading', false);
       } catch (err) {
-        commit("setReviewsLoading", false);
+        commit('setReviewsLoading', false);
       }
     },
 
     setMovieDetailId: ({ commit }, payload) => {
-      commit("setMovieId", payload);
-    }
-  }
+      commit('setMovieId', payload);
+    },
+  },
 };
