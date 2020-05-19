@@ -1,9 +1,9 @@
 export default {
-  searchKeyword: '',
+  searchKeyword: "",
   active: false,
-  mode: 'movie',
+  mode: "movie",
   availableModes: [
-    { id: 'movie', name: 'Search by Movie', preselected: true },
-    { id: 'tvseries', name: 'Search by TV Series' },
-  ],
+    { id: "movie", name: "Search by Movie", preselected: true },
+    { id: "tvseries", name: "Search by TV Series" }
+  ]
 };

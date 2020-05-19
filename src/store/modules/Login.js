@@ -1,10 +1,8 @@
 import axios from '@/api';
-
 import INITIAL_STATE from './Login.initial';
-import { MOVIE_LISTS } from '@/store/storeconstants';
 
 export default {
-  state: INITIAL_STATE,
+  state: { ...INITIAL_STATE },
   getters: {
     loginActive: (state) => state.active,
     loginLoading: (state) => state.loading,
@@ -60,6 +58,10 @@ export default {
       state.userActions = state.userActions.map((action) =>
         action.id === payload.id ? payload : action
       );
+    },
+    resetUserActions(state) {
+      state.userActions = [];
+      state.userActions = INITIAL_STATE.userActions;
     },
   },
   actions: {
@@ -137,30 +139,30 @@ export default {
       }
     },
 
-    getUser: async ({ commit }, payload) => {
+    getUser: ({ commit }, payload) => {
       commit('setActive', false);
       commit('setLoading', true);
 
-      try {
-        const response = await axios.get('/account', {
+      return axios
+        .get('/account', {
           params: {
             session_id: payload,
           },
+        })
+        .then(({ data }) => {
+          commit('setToken', {
+            reset: true,
+            token: payload,
+          });
+          commit('setLoading', false);
+          commit('setUser', data);
+        })
+        .catch((e) => {
+          commit('setError', e.response);
         });
-
-        commit('setToken', {
-          reset: true,
-          token: payload,
-        });
-        commit('setLoading', false);
-        commit('setUser', response.data);
-      } catch (e) {
-        commit('setError', e.response);
-      }
     },
 
     loggedInUserAction: async ({ commit, state }, payload) => {
-      console.log(commit, payload);
       let url, body, message;
       switch (payload.action.id) {
         case 'rate':
@@ -182,7 +184,7 @@ export default {
             session_id: state.token,
           },
         });
-        console.log(response);
+
         commit('setActionsLoading', false);
         commit('updateAction', {
           id: payload.action.id,
@@ -198,18 +200,8 @@ export default {
       }
     },
 
-    getUserMovieLists({ dispatch, state }) {
-      console.log('GETTERS');
-      dispatch(
-        `${MOVIE_LISTS}/initializeMovieList`,
-        {
-          listType: 'user',
-          id: 'watchlist',
-          paths: { userId: state.user.id },
-          params: { session_id: state.token },
-        },
-        { root: true }
-      );
+    resetUserActions({ commit }) {
+      commit('resetUserActions');
     },
   },
 };

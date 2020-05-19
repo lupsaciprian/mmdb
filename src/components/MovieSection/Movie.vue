@@ -45,9 +45,7 @@ export default {
     }
   },
   methods: {
-    hovered() {
-      console.log("hovered");
-    }
+    hovered() {}
   }
 };
 </script>

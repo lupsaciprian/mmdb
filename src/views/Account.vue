@@ -1,5 +1,8 @@
 <template>
-  <div class="container">
+  <div
+    class="container"
+    v-loading="loginLoading"
+  >
     <div class="row">
       <app-movie-list
         v-for="resource in userMovieList"
@@ -22,7 +25,7 @@ export default {
   },
   computed: {
     ...mapGetters(MOVIE_LISTS, ["userMovieList"]),
-    ...mapGetters(LOGIN, ["loginToken", "loginUserData"])
+    ...mapGetters(LOGIN, ["loginLoading", "loginToken", "loginUserData"])
   },
   mounted() {
     if (this.loginToken && this.loginUserData) {

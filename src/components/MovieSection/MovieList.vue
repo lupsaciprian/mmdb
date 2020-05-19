@@ -106,8 +106,13 @@ export default {
   },
   methods: {
     handleScroll($e) {
+      // 20 is standard per page number of the TMDB api
+      const hasPossbileNextPage =
+        this.movies.movies.length === 20 * (this.movies.page - 1);
+
       if (
         $e.target.scrollWidth - $e.target.scrollLeft < 1200 &&
+        hasPossbileNextPage &&
         !this.movies.loading &&
         this.movies.page < 5
       ) {

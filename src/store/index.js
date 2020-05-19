@@ -12,8 +12,6 @@ import movieDetails from './modules/MovieDetail';
 import search from './modules/Search';
 import login from './modules/Login';
 
-console.log(MOVIE_LISTS);
-
 Vue.use(Vuex);
 
 export default new Vuex.Store({

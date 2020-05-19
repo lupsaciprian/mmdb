@@ -5,5 +5,5 @@ export const INITIAL_STATE = {
   movieId: null,
   loading: false,
   reviews: null,
-  reviewsLoading: false,
+  reviewsLoading: false
 };

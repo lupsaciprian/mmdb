@@ -161,7 +161,7 @@ export default {
   watch: {
     $route(to, from) {
       if (to !== from) {
-        console.log("ROUTE CHANGED??");
+        this.$store.dispatch(`${LOGIN}/resetUserActions`);
         this.initializeId();
         this.getMovieDetails();
       }

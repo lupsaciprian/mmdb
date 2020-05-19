@@ -40,9 +40,13 @@ export default {
       selectedId: null
     };
   },
+  watch: {
+    $route(to, from) {
+      if (to !== from) this.selectedId = null;
+    }
+  },
   methods: {
     select(option) {
-      console.log(option);
       if (this.selectedId !== option.id) {
         this.selectedId = option.id;
         this.$emit("optionSelected", option);

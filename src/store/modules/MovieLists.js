@@ -4,7 +4,7 @@ import { INITIAL_STATE, COMPONENT_INITIAL } from './MovieLists.initial';
 import axios from '@/api';
 
 export default {
-  state: INITIAL_STATE,
+  state: { ...INITIAL_STATE },
   getters: {
     allMovieLists: (state) => state.movieLists,
     allPassiveMovieLists: (state) => state.passiveMovieList,
@@ -235,7 +235,6 @@ export default {
     },
 
     getUserMovieLists({ dispatch, state }, payload) {
-      console.log('ML GETUSER', payload);
       Object.keys(state.user).forEach((userMovieListKey) => {
         dispatch('initializeMovieList', {
           listType: 'user',

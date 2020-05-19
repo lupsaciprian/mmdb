@@ -4,7 +4,7 @@
       <li class="nav-item">
         <router-link
           class="nav-link"
-          to="/"
+          :to="{ name: 'Home', exact: true }"
         >
           Dashboard
         </router-link>
