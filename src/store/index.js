@@ -1,16 +1,16 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
 import {
   MOVIE_LISTS,
   MOVIE_DETAILS,
   SEARCH,
-  LOGIN,
-} from '@/store/storeconstants';
+  LOGIN
+} from "@/store/storeconstants";
 
-import movieLists from './modules/MovieLists';
-import movieDetails from './modules/MovieDetail';
-import search from './modules/Search';
-import login from './modules/Login';
+import movieLists from "./modules/MovieLists";
+import movieDetails from "./modules/MovieDetail";
+import search from "./modules/Search";
+import login from "./modules/Login";
 
 Vue.use(Vuex);
 
@@ -21,19 +21,19 @@ export default new Vuex.Store({
   modules: {
     [MOVIE_LISTS]: {
       namespaced: true,
-      ...movieLists,
+      ...movieLists
     },
     [MOVIE_DETAILS]: {
       namespaced: true,
-      ...movieDetails,
+      ...movieDetails
     },
     [SEARCH]: {
       namespaced: true,
-      ...search,
+      ...search
     },
     [LOGIN]: {
       namespaced: true,
-      ...login,
-    },
-  },
+      ...login
+    }
+  }
 });

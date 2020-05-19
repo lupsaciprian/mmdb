@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="container"
-    v-loading="loginLoading"
-  >
+  <div class="container" v-loading="loginLoading">
     <div class="row">
       <app-movie-list
         v-for="resource in userMovieList"

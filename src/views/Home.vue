@@ -21,29 +21,29 @@
 </template>
 
 <script>
-import MovieListVue from '../components/MovieSection/MovieList.vue';
+import MovieListVue from "../components/MovieSection/MovieList.vue";
 
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
-import { MOVIE_LISTS } from '@/store/storeconstants';
+import { MOVIE_LISTS } from "@/store/storeconstants";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
-    appMovieList: MovieListVue,
+    appMovieList: MovieListVue
   },
   computed: {
     ...mapGetters(MOVIE_LISTS, [
-      'allMovieLists',
-      'allPassiveMovieLists',
-      'allPassiveMovieListsArray',
-    ]),
+      "allMovieLists",
+      "allPassiveMovieLists",
+      "allPassiveMovieListsArray"
+    ])
   },
   methods: {
     insertNewMovieSection($e) {
       this.$store.dispatch(`${MOVIE_LISTS}/moveFromPassive`, $e);
-    },
-  },
+    }
+  }
 };
 </script>
 

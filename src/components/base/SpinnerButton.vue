@@ -16,13 +16,13 @@ export default {
   props: {
     isLoading: {
       type: Boolean,
-      required: true,
+      required: true
     },
     classes: {
       type: String,
-      default: 'btn btn-primary btn-lg btn-block',
-    },
-  },
+      default: "btn btn-primary btn-lg btn-block"
+    }
+  }
 };
 </script>
 

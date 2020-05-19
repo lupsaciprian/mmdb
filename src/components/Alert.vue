@@ -9,18 +9,18 @@ export default {
   props: {
     type: {
       type: String,
-      required: true,
+      required: true
     },
     text: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     alertType() {
       return `alert-${this.type}`;
-    },
-  },
+    }
+  }
 };
 </script>
 

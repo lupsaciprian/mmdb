@@ -72,19 +72,19 @@
 </template>
 
 <script>
-import { LOGIN, SEARCH } from '@/store/storeconstants';
-import { mapGetters } from 'vuex';
+import { LOGIN, SEARCH } from "@/store/storeconstants";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
     return {
-      username: '',
-      password: '',
-      keepLoggedIn: true,
+      username: "",
+      password: "",
+      keepLoggedIn: true
     };
   },
   computed: {
-    ...mapGetters(LOGIN, ['loginLoading', 'loginError']),
+    ...mapGetters(LOGIN, ["loginLoading", "loginError"])
   },
   methods: {
     login() {
@@ -101,8 +101,8 @@ export default {
     },
     close() {
       this.$store.dispatch(`${LOGIN}/toggleActive`, false);
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -18,18 +18,18 @@
 </template>
 
 <script>
-import MovieListVue from './MovieSection/MovieList.vue';
+import MovieListVue from "./MovieSection/MovieList.vue";
 
-import { MOVIE_LISTS, SEARCH } from '@/store/storeconstants';
-import { mapGetters } from 'vuex';
+import { MOVIE_LISTS, SEARCH } from "@/store/storeconstants";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
-    appMovieList: MovieListVue,
+    appMovieList: MovieListVue
   },
   computed: {
-    ...mapGetters(MOVIE_LISTS, ['searchMovieList']),
-    ...mapGetters(SEARCH, ['searchAvailableModes', 'searchKeyword']),
+    ...mapGetters(MOVIE_LISTS, ["searchMovieList"]),
+    ...mapGetters(SEARCH, ["searchAvailableModes", "searchKeyword"])
   },
   methods: {
     close() {
@@ -39,7 +39,7 @@ export default {
       this.$store.dispatch(`${SEARCH}/setMode`, $e.id);
 
       this.$store.dispatch(`${SEARCH}/getSearchMovieList`);
-    },
-  },
+    }
+  }
 };
 </script>

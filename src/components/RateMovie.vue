@@ -19,28 +19,28 @@
 </template>
 
 <script>
-import VueSlider from 'vue-slider-component';
-import 'vue-slider-component/theme/default.css';
+import VueSlider from "vue-slider-component";
+import "vue-slider-component/theme/default.css";
 
 export default {
   components: {
-    appSlider: VueSlider,
+    appSlider: VueSlider
   },
   data() {
     return {
       rating: 1,
       minRate: 1,
-      maxRate: 10,
+      maxRate: 10
     };
   },
   methods: {
     formatTooltip() {
-      if (this.rating <= 3) return 'Awful movie';
-      else if (this.rating <= 6) return 'The movie is alright';
-      else if (this.rating <= 8) return 'That was a good movie!';
-      return 'That was a great movie!';
-    },
-  },
+      if (this.rating <= 3) return "Awful movie";
+      else if (this.rating <= 6) return "The movie is alright";
+      else if (this.rating <= 8) return "That was a good movie!";
+      return "That was a great movie!";
+    }
+  }
 };
 </script>
 

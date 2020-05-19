@@ -1,8 +1,8 @@
-import store from '@/store/';
-import { LOGIN } from '@/store/storeconstants';
+import store from "@/store/";
+import { LOGIN } from "@/store/storeconstants";
 
 const requireAuth = async (to, from, next) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
 
   if (to.meta.requireLogin) {
     const isLoggedIn = store.getters[`${LOGIN}/loginIsLoggedIn`];
@@ -12,7 +12,7 @@ const requireAuth = async (to, from, next) => {
         // Block upcoming events untill getUser is finished
         await store.dispatch(`${LOGIN}/getUser`, token);
         next();
-      } else next('');
+      } else next("");
       // next('') = redirect to Home component
     }
   } else {

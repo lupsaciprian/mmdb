@@ -1,8 +1,5 @@
 <template>
-  <form
-    @submit.prevent="search"
-    class="form-inline"
-  >
+  <form @submit.prevent="search" class="form-inline">
     <input
       v-model="searchInput"
       class="form-control mr-sm-2"

@@ -59,22 +59,22 @@
 </template>
 
 <script>
-import MovieVue from './Movie.vue';
+import MovieVue from "./Movie.vue";
 
-import { MOVIE_LISTS } from '@/store/storeconstants';
+import { MOVIE_LISTS } from "@/store/storeconstants";
 
 export default {
   props: {
     resource: {
       type: Object,
-      required: true,
+      required: true
     },
     meta: {
-      type: Object,
-    },
+      type: Object
+    }
   },
   components: {
-    appMovie: MovieVue,
+    appMovie: MovieVue
   },
   computed: {
     movies() {
@@ -83,12 +83,12 @@ export default {
         this.resource.id
       );
       return movies;
-    },
+    }
   },
   mounted() {
     this.$store.dispatch(`${MOVIE_LISTS}/initializeMovieList`, {
       id: this.movies.id,
-      listType: this.movies.listType,
+      listType: this.movies.listType
     });
   },
   methods: {
@@ -106,7 +106,7 @@ export default {
         this.$store.dispatch(`${MOVIE_LISTS}/populateMovieList`, {
           listType: this.movies.listType,
           id: this.movies.id,
-          page: this.movies.page,
+          page: this.movies.page
         });
       }
     },
@@ -115,10 +115,10 @@ export default {
         listType: this.movies.listType,
         id: this.movies.id,
         option: $e.id,
-        page: this.movies.page,
+        page: this.movies.page
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

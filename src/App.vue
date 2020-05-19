@@ -1,14 +1,8 @@
 <template>
-  <div
-    id="app"
-    class="full-screen"
-  >
+  <div id="app" class="full-screen">
     <app-nav ref="navbar" />
 
-    <div
-      id="nav-spacer"
-      :style="{ marginTop: navbarHeight }"
-    ></div>
+    <div id="nav-spacer" :style="{ marginTop: navbarHeight }"></div>
 
     <div class="bg-primary p-4 text-white">
       <h1>My Movie Database app</h1>
@@ -28,7 +22,9 @@
       </div>
     </transition>
 
-    <transition enter-active-class="animate__animated animate__fadeInLeft animate__faster">
+    <transition
+      enter-active-class="animate__animated animate__fadeInLeft animate__faster"
+    >
       <router-view></router-view>
     </transition>
   </div>

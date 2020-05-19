@@ -24,24 +24,24 @@ export default {
   props: {
     contentId: {
       type: String,
-      required: true,
+      required: true
     },
     fallbackText: {
       type: String,
-      default: 'No content to show.',
-    },
+      default: "No content to show."
+    }
   },
   data() {
     return {
-      reveal: false,
+      reveal: false
     };
   },
   methods: {
     revealFired() {
       this.reveal = true;
-      this.$emit('revealFired', this.contentId);
-    },
-  },
+      this.$emit("revealFired", this.contentId);
+    }
+  }
 };
 </script>
 

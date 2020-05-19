@@ -38,17 +38,17 @@
 </template>
 
 <script>
-import { LOGIN, SEARCH } from '@/store/storeconstants';
-import { mapGetters } from 'vuex';
+import { LOGIN, SEARCH } from "@/store/storeconstants";
+import { mapGetters } from "vuex";
 
-import SearchBoxVue from './SearchBox.vue';
+import SearchBoxVue from "./SearchBox.vue";
 
 export default {
   components: {
-    appSearch: SearchBoxVue,
+    appSearch: SearchBoxVue
   },
   computed: {
-    ...mapGetters(LOGIN, ['loginLoading', 'loginIsLoggedIn', 'loginUserData']),
+    ...mapGetters(LOGIN, ["loginLoading", "loginIsLoggedIn", "loginUserData"])
   },
   methods: {
     setLoginActive() {
@@ -57,8 +57,8 @@ export default {
     },
     logout() {
       this.$store.dispatch(`${LOGIN}/logout`);
-    },
-  },
+    }
+  }
 };
 </script>
 
