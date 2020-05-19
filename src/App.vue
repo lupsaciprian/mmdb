@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     ...mapGetters(SEARCH, ["searchActive"]),
-    ...mapGetters(LOGIN, ["loginActive"])
+    ...mapGetters(LOGIN, ["loginActive", "loginLoading"])
   },
   watch: {
     $route() {
@@ -77,7 +77,7 @@ export default {
         request_token: query.request_token
       });
       this.$router.push({ path: "/" });
-    } else this.$store.dispatch(`${LOGIN}/autoLogin`);
+    }
   }
 };
 </script>

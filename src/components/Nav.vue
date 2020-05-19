@@ -2,10 +2,7 @@
   <nav class="navbar navbar-light bg-white fixed-top">
     <ul class="nav nav-pills">
       <li class="nav-item">
-        <router-link
-          class="nav-link"
-          :to="{ name: 'Home', exact: true }"
-        >
+        <router-link class="nav-link" :to="{ name: 'Home', exact: true }">
           Dashboard
         </router-link>
       </li>
@@ -28,34 +25,30 @@
       @click.native="setLoginActive"
       :isLoading="loginLoading"
       classes="btn btn-primary"
-    >Login</app-spinner-button>
+      >Login</app-spinner-button
+    >
 
     <div v-if="loginIsLoggedIn && loginUserData">
       <a class="mr-2 font-weight-bold text-primary">{{
         loginUserData.username
       }}</a>
-      <button
-        @click="logout"
-        class="btn btn-danger"
-      >Logout</button>
+      <button @click="logout" class="btn btn-danger">Logout</button>
     </div>
   </nav>
 </template>
 
 <script>
-import { LOGIN, SEARCH } from "@/store/storeconstants";
-import { mapGetters } from "vuex";
+import { LOGIN, SEARCH } from '@/store/storeconstants';
+import { mapGetters } from 'vuex';
 
-import SearchBoxVue from "./SearchBox.vue";
-import SpinnerButtonVue from "./base/SpinnerButton.vue";
+import SearchBoxVue from './SearchBox.vue';
 
 export default {
   components: {
     appSearch: SearchBoxVue,
-    appSpinnerButton: SpinnerButtonVue
   },
   computed: {
-    ...mapGetters(LOGIN, ["loginLoading", "loginIsLoggedIn", "loginUserData"])
+    ...mapGetters(LOGIN, ['loginLoading', 'loginIsLoggedIn', 'loginUserData']),
   },
   methods: {
     setLoginActive() {
@@ -64,8 +57,8 @@ export default {
     },
     logout() {
       this.$store.dispatch(`${LOGIN}/logout`);
-    }
-  }
+    },
+  },
 };
 </script>
 

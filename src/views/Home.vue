@@ -22,7 +22,6 @@
 
 <script>
 import MovieListVue from '../components/MovieSection/MovieList.vue';
-import ButtonToolbarVue from '../components/ButtonToolbar.vue';
 
 import { mapGetters } from 'vuex';
 
@@ -32,7 +31,6 @@ export default {
   name: 'Home',
   components: {
     appMovieList: MovieListVue,
-    appButtonToolbar: ButtonToolbarVue,
   },
   computed: {
     ...mapGetters(MOVIE_LISTS, [

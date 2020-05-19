@@ -7,10 +7,7 @@
         :options="searchAvailableModes"
       />
 
-      <button
-        class="btn btn-sm btn-dark mr-1 mb-1"
-        @click="close"
-      >
+      <button class="btn btn-sm btn-dark mr-1 mb-1" @click="close">
         <span aria-hidden="true">&times;</span> Close
       </button>
     </div>
@@ -21,20 +18,18 @@
 </template>
 
 <script>
-import MovieListVue from "./MovieSection/MovieList.vue";
-import ButtonToolbarVue from "./ButtonToolbar.vue";
+import MovieListVue from './MovieSection/MovieList.vue';
 
-import { MOVIE_LISTS, SEARCH } from "@/store/storeconstants";
-import { mapGetters } from "vuex";
+import { MOVIE_LISTS, SEARCH } from '@/store/storeconstants';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
     appMovieList: MovieListVue,
-    appButtonToolbar: ButtonToolbarVue
   },
   computed: {
-    ...mapGetters(MOVIE_LISTS, ["searchMovieList"]),
-    ...mapGetters(SEARCH, ["searchAvailableModes", "searchKeyword"])
+    ...mapGetters(MOVIE_LISTS, ['searchMovieList']),
+    ...mapGetters(SEARCH, ['searchAvailableModes', 'searchKeyword']),
   },
   methods: {
     close() {
@@ -44,7 +39,7 @@ export default {
       this.$store.dispatch(`${SEARCH}/setMode`, $e.id);
 
       this.$store.dispatch(`${SEARCH}/getSearchMovieList`);
-    }
-  }
+    },
+  },
 };
 </script>

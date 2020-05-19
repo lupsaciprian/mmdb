@@ -1,19 +1,13 @@
 <template>
   <div class="row">
     <div class="col-md-12 text-right">
-      <button
-        class="btn btn-sm btn-dark mr-2"
-        @click="close"
-      >
+      <button class="btn btn-sm btn-dark mr-2" @click="close">
         <span aria-hidden="true">&times;</span> Close
       </button>
     </div>
     <div class="col-md-6 p-4">
       <form @submit.prevent="login">
-        <app-message-box
-          class="message-box"
-          type="danger"
-        >
+        <app-message-box class="message-box" type="danger">
           <h4 slot="heading">Disabled :(</h4>
           <p slot="details">
             The authorization api does not seem to work when accessing the user
@@ -50,31 +44,27 @@
             class="form-check-input"
             id="exampleCheck1"
           />
-          <label
-            class="form-check-label"
-            for="exampleCheck1"
-          >Keep me logged in</label>
+          <label class="form-check-label" for="exampleCheck1"
+            >Keep me logged in</label
+          >
         </div>
 
-        <button
-          disabled
-          class="btn btn-primary btn-block"
-        >
+        <button disabled class="btn btn-primary btn-block">
           Login
         </button>
       </form>
     </div>
-    <div class="col-md-6 p-4 d-flex flex-column align-items-center justify-content-center">
+    <div
+      class="col-md-6 p-4 d-flex flex-column align-items-center justify-content-center"
+    >
       <app-spinner-button
         @click.native="loginByRedirect"
         :isLoading="loginLoading"
         class="mb-2"
         classes="btn btn-success btn-block"
-      >Login with TMDB</app-spinner-button>
-      <button
-        disabled
-        class="btn btn-outline-dark  btn-block"
+        >Login with TMDB</app-spinner-button
       >
+      <button disabled class="btn btn-outline-dark  btn-block">
         Login as Guest (coming soon)
       </button>
     </div>
@@ -82,26 +72,19 @@
 </template>
 
 <script>
-import { LOGIN, SEARCH } from "@/store/storeconstants";
-import { mapGetters } from "vuex";
-
-import SpinnerButtonVue from "./base/SpinnerButton.vue";
-import MessageBoxVue from "./base/MessageBox.vue";
+import { LOGIN, SEARCH } from '@/store/storeconstants';
+import { mapGetters } from 'vuex';
 
 export default {
-  components: {
-    appSpinnerButton: SpinnerButtonVue,
-    appMessageBox: MessageBoxVue
-  },
   data() {
     return {
-      username: "",
-      password: "",
-      keepLoggedIn: true
+      username: '',
+      password: '',
+      keepLoggedIn: true,
     };
   },
   computed: {
-    ...mapGetters(LOGIN, ["loginLoading", "loginError"])
+    ...mapGetters(LOGIN, ['loginLoading', 'loginError']),
   },
   methods: {
     login() {
@@ -118,8 +101,8 @@ export default {
     },
     close() {
       this.$store.dispatch(`${LOGIN}/toggleActive`, false);
-    }
-  }
+    },
+  },
 };
 </script>
 

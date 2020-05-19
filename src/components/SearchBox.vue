@@ -32,11 +32,12 @@ export default {
   },
   methods: {
     search() {
-      this.$store.dispatch(`${LOGIN}/toggleActive`, false);
-      this.$store.dispatch(`${SEARCH}/toggleActive`, true);
-      this.$store.dispatch(`${SEARCH}/setSearchKeyword`, this.searchInput);
+      const { dispatch } = this.$store;
+      dispatch(`${LOGIN}/toggleActive`, false);
+      dispatch(`${SEARCH}/toggleActive`, true);
+      dispatch(`${SEARCH}/setSearchKeyword`, this.searchInput);
 
-      this.$store.dispatch(`${SEARCH}/getSearchMovieList`);
+      dispatch(`${SEARCH}/getSearchMovieList`);
     }
   }
 };

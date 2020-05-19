@@ -128,18 +128,9 @@ export default {
       commit('logout');
     },
 
-    autoLogin: ({ dispatch, commit }) => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        commit('setToken', {
-          reset: false,
-          token,
-        });
-        dispatch('getUser', token);
-      }
-    },
+    getUser: ({ commit, state }, payload) => {
+      if (state.isLoggedIn) return;
 
-    getUser: ({ commit }, payload) => {
       commit('setActive', false);
       commit('setLoading', true);
 
@@ -156,6 +147,7 @@ export default {
           });
           commit('setLoading', false);
           commit('setUser', data);
+          console.log('LOGGED IN');
         })
         .catch((e) => {
           commit('setError', e.response);
@@ -179,7 +171,7 @@ export default {
 
       commit('setActionsLoading', true);
       try {
-        const response = await axios.post(url, body, {
+        await axios.post(url, body, {
           params: {
             session_id: state.token,
           },

@@ -34,8 +34,8 @@ export default {
         userId: this.loginUserData.id
       });
     } else {
-      this.$store.dispatch(`${LOGIN}/toggleActive`, true);
-      this.$router.push("/");
+      // this.$store.dispatch(`${LOGIN}/toggleActive`, true);
+      // this.$router.push("/");
     }
   }
 };

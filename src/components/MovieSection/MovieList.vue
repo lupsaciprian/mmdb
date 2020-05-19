@@ -1,9 +1,6 @@
 <template>
   <div class="container my-4 animate__animated animate__fadeIn">
-    <div
-      class="container my-2"
-      v-loading="movies.loading"
-    >
+    <div class="container my-2" v-loading="movies.loading">
       <div class="row justify-content-between">
         <h2>{{ movies.name }}</h2>
         <app-button-toolbar
@@ -17,11 +14,7 @@
     </div>
 
     <div class="h-100">
-      <app-message-box
-        class="message-box"
-        v-if="movies.error"
-        type="danger"
-      >
+      <app-message-box class="message-box" v-if="movies.error" type="danger">
         <h4 slot="heading">{{ movies.error.title }}</h4>
         <p slot="details">{{ movies.error.message }}</p>
       </app-message-box>
@@ -66,28 +59,22 @@
 </template>
 
 <script>
-// import axios from "@/api";
+import MovieVue from './Movie.vue';
 
-import MovieVue from "./Movie.vue";
-import ButtonToolbarVue from "../ButtonToolbar.vue";
-import MessageBoxVue from "../base/MessageBox.vue";
-
-import { MOVIE_LISTS } from "@/store/storeconstants";
+import { MOVIE_LISTS } from '@/store/storeconstants';
 
 export default {
   props: {
     resource: {
       type: Object,
-      required: true
+      required: true,
     },
     meta: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   components: {
     appMovie: MovieVue,
-    appButtonToolbar: ButtonToolbarVue,
-    appMessageBox: MessageBoxVue
   },
   computed: {
     movies() {
@@ -96,12 +83,12 @@ export default {
         this.resource.id
       );
       return movies;
-    }
+    },
   },
   mounted() {
     this.$store.dispatch(`${MOVIE_LISTS}/initializeMovieList`, {
       id: this.movies.id,
-      listType: this.movies.listType
+      listType: this.movies.listType,
     });
   },
   methods: {
@@ -119,7 +106,7 @@ export default {
         this.$store.dispatch(`${MOVIE_LISTS}/populateMovieList`, {
           listType: this.movies.listType,
           id: this.movies.id,
-          page: this.movies.page
+          page: this.movies.page,
         });
       }
     },
@@ -128,10 +115,10 @@ export default {
         listType: this.movies.listType,
         id: this.movies.id,
         option: $e.id,
-        page: this.movies.page
+        page: this.movies.page,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
