@@ -2,71 +2,71 @@ export const INITIAL_STATE = {
   movieDetailsId: null,
   movieLists: {
     trending: {
-      id: 'trending',
-      name: 'Trending movies',
-      listType: 'movieLists',
+      id: "trending",
+      name: "Trending movies",
+      listType: "movieLists"
     },
-    bygenre: { id: 'bygenre', name: 'Movies by genre', listType: 'movieLists' },
+    bygenre: { id: "bygenre", name: "Movies by genre", listType: "movieLists" }
   },
   passiveMovieList: {
-    popular: { id: 'popular', name: 'Popular Movies', listType: 'movieLists' },
+    popular: { id: "popular", name: "Popular Movies", listType: "movieLists" },
     toprated: {
-      id: 'toprated',
-      name: 'Top Rated Movies',
-      listType: 'movieLists',
+      id: "toprated",
+      name: "Top Rated Movies",
+      listType: "movieLists"
     },
     upcoming: {
-      id: 'upcoming',
-      name: 'Upcoming Movies',
-      listType: 'movieLists',
+      id: "upcoming",
+      name: "Upcoming Movies",
+      listType: "movieLists"
     },
     latestseries: {
-      id: 'latestseries',
-      name: 'Latest TV Series',
-      listType: 'movieLists',
-    },
+      id: "latestseries",
+      name: "Latest TV Series",
+      listType: "movieLists"
+    }
   },
   movieDetailLists: {
     similar: {
-      id: 'similar',
-      name: 'Similar movies to this movie',
-      listType: 'movieDetailLists',
+      id: "similar",
+      name: "Similar movies to this movie",
+      listType: "movieDetailLists"
     },
     recommended: {
-      id: 'recommended',
-      name: 'Recommended movies for this movie ',
-      listType: 'movieDetailLists',
-    },
+      id: "recommended",
+      name: "Recommended movies for this movie ",
+      listType: "movieDetailLists"
+    }
   },
   searchResults: {
     search: {
-      id: 'search',
-      name: 'Search results',
-      listType: 'searchResults',
-    },
+      id: "search",
+      name: "Search results",
+      listType: "searchResults"
+    }
   },
   user: {
     rated: {
-      id: 'rated',
-      name: 'Movies rated by you',
-      listType: 'user',
+      id: "rated",
+      name: "Movies rated by you",
+      listType: "user"
     },
     watchlist: {
-      id: 'watchlist',
-      name: 'Movies in your watchlist',
-      listType: 'user',
+      id: "watchlist",
+      name: "Movies in your watchlist",
+      listType: "user"
     },
     favorite: {
-      id: 'favorite',
-      name: 'Your favorite movies',
-      listType: 'user',
-    },
-  },
+      id: "favorite",
+      name: "Your favorite movies",
+      listType: "user"
+    }
+  }
 };
 
 export const COMPONENT_INITIAL = {
   loading: false,
   movies: [],
   page: 1,
-  requestUrl: null,
+  requestUrl: null
 };

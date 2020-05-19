@@ -8,16 +8,16 @@ export default {
   userActionsLoading: false,
   userActions: [
     {
-      id: 'rate',
-      name: 'Rate this movie',
+      id: "rate",
+      name: "Rate this movie"
     },
     {
-      id: 'watchlist',
-      name: 'Add to watchlist',
+      id: "watchlist",
+      name: "Add to watchlist"
     },
     {
-      id: 'favorite',
-      name: 'Add to favorites',
-    },
-  ],
+      id: "favorite",
+      name: "Add to favorites"
+    }
+  ]
 };
