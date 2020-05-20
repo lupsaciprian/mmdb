@@ -33,7 +33,6 @@
 
 <script>
 import VueSlider from 'vue-slider-component';
-import 'vue-slider-component/theme/default.css';
 
 import { mapGetters } from 'vuex';
 import { LOGIN, MOVIE_DETAILS } from '@/store/storeconstants';

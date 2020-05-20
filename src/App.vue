@@ -32,6 +32,7 @@
 
 <script>
 import NavVue from './components/Nav/Nav.vue';
+import NavMobileVue from './components/Nav/NavMobile.vue';
 
 import { mapGetters } from 'vuex';
 import { LOGIN } from '@/store/storeconstants';
@@ -40,7 +41,7 @@ export default {
   // Lazy loaded components
   components: {
     appNav: NavVue,
-    appNavMobile: () => import('./components/Nav/NavMobile'),
+    appNavMobile: NavMobileVue,
     appSearchResults: () => import('./components/Search/SearchResults'),
     appLogin: () => import('./components/Login'),
   },
