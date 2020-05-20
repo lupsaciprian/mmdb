@@ -59,7 +59,6 @@ export default {
   },
   methods: {
     decideOverlay() {
-      // return 'appNavMobile';
       switch (this.activeDropdown) {
         case 'login':
           return 'appLogin';
@@ -71,12 +70,8 @@ export default {
           return null;
       }
     },
-    getNavbarHeight() {
-      this.navbarHeight = this.$refs.navbar.$el.clientHeight + 'px';
-    },
   },
   mounted() {
-    this.getNavbarHeight();
     this.$store.dispatch('setMobile', window.innerWidth);
 
     const { path, query } = this.$route;
@@ -87,6 +82,10 @@ export default {
       });
       this.$router.push({ path: '/' });
     }
+
+    this.$nextTick().then(() => {
+      this.navbarHeight = this.$refs.navbar.$el.clientHeight + 'px';
+    });
   },
 };
 </script>

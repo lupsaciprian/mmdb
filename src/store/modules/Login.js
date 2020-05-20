@@ -80,7 +80,6 @@ export default {
               request_token: data.data.request_token,
             }
           );
-          commit('setActive', payload);
           commit('setToken', {
             token: loginRequest.data.request_token,
             keepLoggedIn: payload.keepLoggedIn,
@@ -96,8 +95,6 @@ export default {
     },
     loginByRedirect: async ({ commit }) => {
       commit('setLoading', true);
-      // Process ENV not working :()
-      console.log(process.env);
       try {
         let data = await axios.get('/authentication/token/new');
         window.open(
@@ -132,7 +129,6 @@ export default {
     getUser: ({ commit, state }, payload) => {
       if (state.isLoggedIn) return;
 
-      commit('setActive', false);
       commit('setLoading', true);
 
       return axios
