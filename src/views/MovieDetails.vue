@@ -73,7 +73,7 @@
           </div>
         </div>
 
-        <div class="card  ">
+        <div v-if="loginIsLoggedIn" class="card  ">
           <div class="card-body card-info">
             <app-rate-movie></app-rate-movie>
           </div>

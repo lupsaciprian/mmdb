@@ -96,12 +96,15 @@ export default {
     },
     loginByRedirect: async ({ commit }) => {
       commit('setLoading', true);
+      // Process ENV not working :()
+      console.log(process.env);
       try {
         let data = await axios.get('/authentication/token/new');
         window.open(
-          `https://www.themoviedb.org/authenticate/${data.data.request_token}?redirect_to=${process.env.BASE_URL}/redirected`
+          `https://www.themoviedb.org/authenticate/${data.data.request_token}?redirect_to=https://mmdb-95041.web.app/redirected`
         );
         window.close();
+        commit('setLoading', false);
       } catch (e) {
         if (e) commit('setError', e.response);
       }
