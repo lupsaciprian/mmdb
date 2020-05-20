@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-light bg-white fixed-top">
+  <nav class="navbar navbar-light bg-white fixed-top" style="max-height: 70px;">
     <ul v-if="!isMobile" class="nav nav-pills">
       <li class="nav-item">
         <router-link class="nav-link" :to="{ name: 'Home', exact: true }">
@@ -45,9 +45,10 @@
 
     <div v-else>
       <button
-        class="navbar-toggler"
+        class="navbar-toggler p-0"
         type="button"
         @click="toggleMobileDropdown"
+        style="border: 0;"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
