@@ -14,7 +14,7 @@
         >{{ rating }} / {{ maxRate }}</span
       >
     </div>
-    <div class="d-flex justify-content-between align-items-center mt-2 w-100">
+    <div class="d-flex justify-content-between align-items-center mt-4 w-100">
       <span v-if="movie" class="font-weight-bold h5">
         Rated at:
         <span class="badge badge-primary">{{ movie.vote_average }}</span>
