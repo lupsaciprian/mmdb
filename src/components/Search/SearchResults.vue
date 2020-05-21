@@ -14,8 +14,12 @@
         <span aria-hidden="true">&times;</span> Close
       </button>
     </div>
-    <div class="col-12 text-left">
-      <app-movie-list :resource="searchMovieList" />
+    <div
+      v-for="list in searchMovieLists"
+      :key="list.id"
+      class="col-12 text-left"
+    >
+      <app-movie-list :resource="list" />
     </div>
   </div>
 </template>
@@ -31,7 +35,7 @@ export default {
     appMovieList: MovieListVue
   },
   computed: {
-    ...mapGetters(MOVIE_LISTS, ["searchMovieList"]),
+    ...mapGetters(MOVIE_LISTS, ["searchMovieLists"]),
     ...mapGetters(SEARCH, [
       "searchAvailableModes",
       "searchKeyword",
@@ -47,9 +51,8 @@ export default {
       this.getSearchResults();
     },
     getSearchResults() {
-      console.log(this.searchMovieList);
       this.$store.dispatch(`${MOVIE_LISTS}/getMovieListsByType`, {
-        listType: this.searchMovieList.listType,
+        listType: "searchResults",
         params: { query: this.searchKeyword },
         mode: this.searchMode
       });

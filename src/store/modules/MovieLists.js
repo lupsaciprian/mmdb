@@ -14,7 +14,7 @@ export default {
     // Movie Details
     movieDetailLists: (state) => state.movieDetail,
     //Search
-    searchMovieList: (state) => state.searchResults.search,
+    searchMovieLists: (state) => state.searchResults,
     // My account/User
     userMovieList: (state) => state.user,
 
