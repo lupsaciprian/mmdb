@@ -1,6 +1,12 @@
 <template>
-  <div class="container movie-details-main h-100 my-5" v-loading="loading">
-    <div v-if="movie" class="row">
+  <div
+    class="container movie-details-main h-100 my-5"
+    v-loading="loading"
+  >
+    <div
+      v-if="movie"
+      class="row"
+    >
       <div class="col-12 col-md-4 position-relative">
         <div class="card position-sticky">
           <div class="card-body text-left">
@@ -22,12 +28,10 @@
         </div>
       </div>
 
-      <div
-        class="
+      <div class="
               col-12
               col-md-8
-              description-panel"
-      >
+              description-panel">
         <div class="card">
           <div class="card-body text-left card-info">
             <h3>About this movie</h3>
@@ -39,8 +43,7 @@
                 v-for="genre in movie.genres"
                 :key="genre.id"
                 class="badge badge-secondary mr-1"
-                >{{ genre.name }}</span
-              >
+              >{{ genre.name }}</span>
 
               <p class="mt-2">
                 Available languages: {{ movie.spoken_languages }}
@@ -49,7 +52,10 @@
           </div>
         </div>
 
-        <div v-if="movie.production_companies.length > 0" class="card  ">
+        <div
+          v-if="movie.production_companies.length > 0"
+          class="card  "
+        >
           <div class="card-body text-left card-info">
             <div class="description-box">
               <h3>Produced by:</h3>
@@ -64,7 +70,10 @@
                     v-lazy="imageSrc + company.logo_path"
                     class="card-img"
                   />
-                  <span v-else class="font-weight-bold">{{
+                  <span
+                    v-else
+                    class="font-weight-bold"
+                  >{{
                     company.name
                   }}</span>
                 </div>
@@ -73,7 +82,10 @@
           </div>
         </div>
 
-        <div v-if="loginIsLoggedIn" class="card  ">
+        <div
+          v-if="loginIsLoggedIn"
+          class="card  "
+        >
           <div class="card-body card-info">
             <app-rate-movie></app-rate-movie>
           </div>
@@ -103,9 +115,12 @@
         </app-reveal>
       </div>
     </div>
-    <div class="row" v-if="allMovieDetailsLists">
+    <div
+      class="row"
+      v-if="movieDetailLists"
+    >
       <app-movie-list
-        v-for="movieList in allMovieDetailsLists"
+        v-for="movieList in movieDetailLists"
         :key="movieList.id"
         :resource="movieList"
       />
@@ -114,80 +129,86 @@
 </template>
 
 <script>
-import MovieListVue from '../components/MovieSection/MovieList.vue';
-import RevealVue from '../components/Reveal.vue';
-import DetailReviewVue from '../components/DetailReview.vue';
-import RateMovieVue from '../components/RateMovie.vue';
+import MovieListVue from "../components/MovieSection/MovieList.vue";
+import RevealVue from "../components/Reveal.vue";
+import DetailReviewVue from "../components/DetailReview.vue";
+import RateMovieVue from "../components/RateMovie.vue";
 
-import { MOVIE_LISTS, MOVIE_DETAILS, LOGIN } from '@/store/storeconstants';
-import { mapGetters } from 'vuex';
-import { imageSrc } from '@/config/constants';
+import { MOVIE_LISTS, MOVIE_DETAILS, LOGIN } from "@/store/storeconstants";
+import { mapGetters } from "vuex";
+import { imageSrc } from "@/config/constants";
 
 export default {
   components: {
     appMovieList: MovieListVue,
     appReveal: RevealVue,
     appDetailReview: DetailReviewVue,
-    appRateMovie: RateMovieVue,
+    appRateMovie: RateMovieVue
   },
   data() {
     return {
-      imageSrc,
+      imageSrc
     };
   },
   computed: {
-    ...mapGetters(MOVIE_LISTS, ['allMovieDetailsLists']),
+    ...mapGetters(MOVIE_LISTS, ["movieDetailLists"]),
     ...mapGetters(MOVIE_DETAILS, [
-      'movieId',
-      'movie',
-      'loading',
-      'reviews',
-      'reviewsLoading',
+      "movieId",
+      "movie",
+      "loading",
+      "reviews",
+      "reviewsLoading"
     ]),
     ...mapGetters(LOGIN, [
-      'loginIsLoggedIn',
-      'loginUserData',
-      'loginUserActionsLeft',
-      'loginUserActionsLoading',
+      "loginIsLoggedIn",
+      "loginUserData",
+      "loginUserActionsLeft",
+      "loginUserActionsLoading"
     ]),
     id() {
       return this.$route.params.id;
-    },
+    }
   },
   watch: {
     $route(to, from) {
       if (to !== from) {
         this.$store.dispatch(`${LOGIN}/resetUserActions`);
         this.initializeId();
-        this.getMovieDetails();
+        this.getMovieDetailsAndMovieLists();
       }
-    },
+    }
   },
   methods: {
-    getMovieDetails() {
+    getMovieDetailsAndMovieLists() {
       this.$store.dispatch(`${MOVIE_DETAILS}/getMovieDetails`);
+
+      this.$store.dispatch(`${MOVIE_LISTS}/getMovieListsByType`, {
+        listType: "movieDetail",
+        paths: {
+          movieId: this.id
+        }
+      });
     },
     getReviews() {
       this.$store.dispatch(`${MOVIE_DETAILS}/getMovieDetailsReviews`);
     },
     initializeId() {
-      this.$store.dispatch(`${MOVIE_LISTS}/setMovieDetailsId`, this.id);
       this.$store.dispatch(`${MOVIE_DETAILS}/setMovieDetailId`, this.id);
     },
     loggedUserAction(action) {
       this.$store.dispatch(`${LOGIN}/loggedInUserAction`, {
         action,
         userId: this.loginUserData.id,
-        movieId: this.movieId,
+        movieId: this.movieId
       });
-    },
+    }
   },
   created() {
     this.initializeId();
   },
   mounted() {
-    this.getMovieDetails();
-  },
+    this.getMovieDetailsAndMovieLists();
+  }
 };
 </script>
 

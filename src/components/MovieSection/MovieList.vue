@@ -1,6 +1,9 @@
 <template>
   <div class="container my-4 animate__animated animate__fadeIn">
-    <div class="container my-2" v-loading="movies.loading">
+    <div
+      class="container my-2"
+      v-loading="movies.loading"
+    >
       <div class="row justify-content-between">
         <h2>{{ movies.name }}</h2>
         <app-button-toolbar
@@ -14,7 +17,11 @@
     </div>
 
     <div class="h-100">
-      <app-message-box class="message-box" v-if="movies.error" type="danger">
+      <app-message-box
+        class="message-box"
+        v-if="movies.error"
+        type="danger"
+      >
         <h4 slot="heading">{{ movies.error.title }}</h4>
         <p slot="details">{{ movies.error.message }}</p>
       </app-message-box>
@@ -85,12 +92,7 @@ export default {
       return movies;
     }
   },
-  mounted() {
-    this.$store.dispatch(`${MOVIE_LISTS}/initializeMovieList`, {
-      id: this.movies.id,
-      listType: this.movies.listType
-    });
-  },
+  mounted() {},
   methods: {
     handleScroll($e) {
       // 20 is standard per page number of the TMDB api

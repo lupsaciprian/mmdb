@@ -1,127 +1,112 @@
-import Vue from "vue";
-import { INITIAL_STATE, COMPONENT_INITIAL } from "./MovieLists.initial";
+import Vue from 'vue';
+import { INITIAL_STATE, COMPONENT_INITIAL } from './MovieLists.initial';
 
-import axios from "@/config/api";
+import axios from '@/config/api';
 
 export default {
   state: { ...INITIAL_STATE },
   getters: {
-    allMovieLists: state => state.movieLists,
-    allPassiveMovieLists: state => state.passiveMovieList,
-    allMovieDetailsLists: state => state.movieDetailLists,
-    searchMovieList: state => state.searchResults.search,
-    userMovieList: state => state.user,
+    // Home
+    homeMovieLists: (state) => state.home,
+    homePassiveMovieLists: (state) => state.homePassive,
+    homePassiveMovieListsArray: (state) =>
+      Object.keys(state.homePassive).map((key) => state.homePassive[key]),
+    // Movie Details
+    movieDetailLists: (state) => state.movieDetail,
+    //Search
+    searchMovieList: (state) => state.searchResults.search,
+    // My account/User
+    userMovieList: (state) => state.user,
 
-    allPassiveMovieListsArray: state =>
-      Object.keys(state.passiveMovieList).map(
-        key => state.passiveMovieList[key]
-      ),
-
-    getFromMovieLists: state => (listType, id) => state[listType][id]
+    getFromMovieLists: (state) => (listType, id) => state[listType][id],
   },
   mutations: {
-    mutateMovieLists: (state, payload) => {
-      state.movieList = { ...state.movieList, ...payload };
-    },
-    mutateMovieList: (state, payload) => {
-      state.movieList[payload.id] = {
-        ...state.movieList[payload.id],
-        ...payload
-      };
-    },
     movePassiveList: (state, payload) => {
-      state.movieLists = {
-        ...state.movieLists,
-        [payload.id]: { ...payload }
+      state[payload.to] = {
+        ...state[payload.to],
+        [payload.id]: { ...payload },
       };
 
-      // Using normal JS delete doesnt trigger the allPassiveMovieListArray getter change detection
-      Vue.delete(state.passiveMovieList, payload.id);
+      Vue.delete(state.homePassive, payload.id);
     },
 
     initializeMovieList: (state, payload) => {
       state[payload.listType][payload.id] = {
         ...state[payload.listType][payload.id],
-        ...payload
+        ...payload,
       };
     },
     setProperty: (state, payload) => {
       state[payload.listType][payload.id] = {
         ...state[payload.listType][payload.id],
-        ...payload.toUpdate
+        ...payload.toUpdate,
       };
     },
     resetMovieProp: (state, payload) => {
       state[payload.listType][payload.id] = {
         ...state[payload.listType][payload.id],
         movies: COMPONENT_INITIAL.movies,
-        page: COMPONENT_INITIAL.page
+        page: COMPONENT_INITIAL.page,
       };
     },
 
     setError: (state, payload) => {
       state[payload.listType][payload.id] = {
         ...state[payload.listType][payload.id],
-        error: payload.error
+        error: payload.error,
       };
     },
-
-    setMovieDetailsId: (state, payload) => {
-      state.movieDetailsId = payload;
-    }
   },
   actions: {
-    moveFromPassive: ({ commit }, payload) => {
-      commit("movePassiveList", payload);
-    },
-    addOrUpdateMovieLists: ({ commit }, payload) => {
-      commit("mutateMovieLists", payload);
+    getMovieListsByType: ({ dispatch, state }, payload) => {
+      console.log(payload, state[payload.listType]);
+      Object.keys(state[payload.listType]).forEach((listId) => {
+        dispatch('initializeMovieList', {
+          id: listId,
+          ...payload,
+        });
+      });
     },
 
-    initializeMovieList: ({ commit, dispatch, state }, payload) => {
+    initializeMovieList: ({ commit, dispatch }, payload) => {
       payload = { ...payload, ...COMPONENT_INITIAL };
 
       switch (payload.id) {
-        case "trending":
+        case 'trending':
           payload.requestUrl = `/trending/movie/day`;
           break;
-        case "bygenre":
+        case 'bygenre':
           payload.options = [];
           payload.requireOptions = true;
-          payload.requireOptionsMessage = "Please select an option first";
+          payload.requireOptionsMessage = 'Please select an option first';
           break;
-        case "toprated":
-          payload.requestUrl = "/movie/top_rated";
+        case 'top_rated':
+        case 'upcoming':
+        case 'popular':
+          payload.requestUrl = `/movie/${payload.id}`;
           break;
-        case "upcoming":
-          payload.requestUrl = "/movie/upcoming";
-          break;
-        case "popular":
-          payload.requestUrl = "/movie/popular";
-          break;
-        case "latestseries":
+        case 'latestseries':
           // payload :)
-          payload.requestUrl = "/tv/airing_today";
+          payload.requestUrl = '/tv/airing_today';
           break;
-        case "similar":
-          payload.requestUrl = `/movie/${state.movieDetailsId}/similar`;
+        case 'similar':
+        case 'recommendations':
+          if (!payload.paths) return;
+          payload.requestUrl = `/movie/${payload.paths.movieId}/${payload.id}`;
           break;
-        case "recommended":
-          payload.requestUrl = `/movie/${state.movieDetailsId}/recommendations`;
-          break;
-        case "search":
+        case 'search':
           if (!payload.params) return;
-          if (payload.mode === "movie") payload.requestUrl = "/search/movie";
-          if (payload.mode === "tvseries") payload.requestUrl = "/search/tv";
+          if (payload.mode === 'movie') payload.requestUrl = '/search/movie';
+          if (payload.mode === 'tvseries') payload.requestUrl = '/search/tv';
           break;
-        case "rated":
-        case "watchlist":
-        case "favorite":
+        case 'rated':
+        case 'watchlist':
+        case 'favorite':
           if (!payload.paths || !payload.params) return;
           payload.requestUrl = `/account/${payload.paths.userId}/${payload.id}/movies`;
       }
 
-      commit("initializeMovieList", payload);
+      commit('initializeMovieList', payload);
       dispatch(`populateMovieList`, payload);
     },
 
@@ -129,8 +114,8 @@ export default {
       const { id, listType } = payload;
       const list = state[listType][id];
 
-      const handleError = err => {
-        commit("setProperty", {
+      const handleError = (err) => {
+        commit('setProperty', {
           id,
           listType,
           toUpdate: {
@@ -138,57 +123,57 @@ export default {
             error: {
               title: err.response
                 ? `Error! (${err.response.data.status_code})`
-                : "Error!",
+                : 'Error!',
               message: err.response
                 ? err.response.data.status_message
-                : "There was a problem loading this section."
-            }
-          }
+                : 'There was a problem loading this section.',
+            },
+          },
         });
       };
 
-      commit("setProperty", {
+      commit('setProperty', {
         id,
         listType,
-        toUpdate: { loading: true }
+        toUpdate: { loading: true },
       });
 
       if (!list.requireOptions) {
         let params = {
           ...list.params,
-          page: payload.page ? payload.page : list.page
+          page: payload.page ? payload.page : list.page,
         };
         try {
           const res = await axios.get(list.requestUrl, {
-            params
+            params,
           });
-          commit("setProperty", {
+          commit('setProperty', {
             id,
             listType,
             toUpdate: {
               loading: false,
               movies: [...list.movies, ...res.data.results],
               page: payload.page + 1,
-              error: null
-            }
+              error: null,
+            },
           });
         } catch (err) {
           handleError(err);
         }
       } else if (list.requireOptions) {
         let url;
-        if (id === "bygenre") url = "/genre/movie/list";
+        if (id === 'bygenre') url = '/genre/movie/list';
 
         try {
           const res = await axios.get(url);
-          commit("setProperty", {
+          commit('setProperty', {
             id,
             listType,
             toUpdate: {
               loading: false,
               options: [...list.options, ...res.data.genres],
-              error: null
-            }
+              error: null,
+            },
           });
         } catch (err) {
           handleError(err);
@@ -197,52 +182,31 @@ export default {
     },
 
     actionSelected: async ({ commit, dispatch }, payload) => {
-      dispatch("resetMovieProp", payload);
+      dispatch('resetMovieProp', payload);
       const { id, listType } = payload;
 
-      if (payload.id === "bygenre") {
-        commit("setProperty", {
+      if (payload.id === 'bygenre') {
+        commit('setProperty', {
           id,
           listType,
           toUpdate: {
             requestUrl: `/discover/movie?with_genre=${payload.option}`,
-            requireOptions: false
-          }
+            requireOptions: false,
+          },
         });
       }
 
-      dispatch("populateMovieList", payload);
+      dispatch('populateMovieList', payload);
+    },
+
+    moveToOtherList: ({ commit, dispatch }, payload) => {
+      commit('movePassiveList', payload);
+      Vue.delete(payload, payload.to);
+      dispatch('getMovieListsByType', payload);
     },
 
     resetMovieProp: ({ commit }, payload) => {
-      commit("resetMovieProp", payload);
+      commit('resetMovieProp', payload);
     },
-
-    setMovieDetailsId: ({ commit, state, dispatch }, payload) => {
-      if (state.movieDetailsId && payload !== state.movieDetailsId) {
-        // Reset all movie details movie lists
-        // The order is important for setMoviesDetailsId!
-        commit("setMovieDetailsId", payload);
-        Object.keys(state.movieDetailLists).forEach(listKey => {
-          dispatch("initializeMovieList", {
-            listType: "movieDetailLists",
-            id: listKey
-          });
-        });
-      } else {
-        commit("setMovieDetailsId", payload);
-      }
-    },
-
-    getUserMovieLists({ dispatch, state }, payload) {
-      Object.keys(state.user).forEach(userMovieListKey => {
-        dispatch("initializeMovieList", {
-          listType: "user",
-          id: userMovieListKey,
-          paths: { userId: payload.userId },
-          params: { session_id: payload.token }
-        });
-      });
-    }
-  }
+  },
 };

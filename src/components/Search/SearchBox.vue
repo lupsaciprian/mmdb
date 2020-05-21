@@ -23,27 +23,25 @@
 </template>
 
 <script>
-import { SEARCH } from '@/store/storeconstants';
-import { mapGetters } from 'vuex';
+import { SEARCH } from "@/store/storeconstants";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
     return {
-      searchInput: '',
+      searchInput: ""
     };
   },
   computed: {
-    ...mapGetters(['isMobile']),
+    ...mapGetters(["isMobile"])
   },
   methods: {
     search() {
       const { dispatch } = this.$store;
-      dispatch('setActiveDropdown', 'search');
+      dispatch("setActiveDropdown", "search");
       dispatch(`${SEARCH}/setSearchKeyword`, this.searchInput);
-
-      dispatch(`${SEARCH}/getSearchMovieList`);
-    },
-  },
+    }
+  }
 };
 </script>
 

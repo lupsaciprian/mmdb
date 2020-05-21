@@ -7,7 +7,10 @@
         :options="searchAvailableModes"
       />
 
-      <button class="btn btn-sm btn-dark mr-1 mb-1" @click="close">
+      <button
+        class="btn btn-sm btn-dark mr-1 mb-1"
+        @click="close"
+      >
         <span aria-hidden="true">&times;</span> Close
       </button>
     </div>
@@ -18,28 +21,42 @@
 </template>
 
 <script>
-import MovieListVue from '@/components/MovieSection/MovieList.vue';
+import MovieListVue from "@/components/MovieSection/MovieList.vue";
 
-import { MOVIE_LISTS, SEARCH } from '@/store/storeconstants';
-import { mapGetters } from 'vuex';
+import { MOVIE_LISTS, SEARCH } from "@/store/storeconstants";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
-    appMovieList: MovieListVue,
+    appMovieList: MovieListVue
   },
   computed: {
-    ...mapGetters(MOVIE_LISTS, ['searchMovieList']),
-    ...mapGetters(SEARCH, ['searchAvailableModes', 'searchKeyword']),
+    ...mapGetters(MOVIE_LISTS, ["searchMovieList"]),
+    ...mapGetters(SEARCH, [
+      "searchAvailableModes",
+      "searchKeyword",
+      "searchMode"
+    ])
   },
   methods: {
     close() {
-      this.$store.dispatch('setActiveDropdown', null);
+      this.$store.dispatch("setActiveDropdown", null);
     },
     selectedMode($e) {
       this.$store.dispatch(`${SEARCH}/setMode`, $e.id);
-
-      this.$store.dispatch(`${SEARCH}/getSearchMovieList`);
+      this.getSearchResults();
     },
+    getSearchResults() {
+      console.log(this.searchMovieList);
+      this.$store.dispatch(`${MOVIE_LISTS}/getMovieListsByType`, {
+        listType: this.searchMovieList.listType,
+        params: { query: this.searchKeyword },
+        mode: this.searchMode
+      });
+    }
   },
+  mounted() {
+    this.getSearchResults();
+  }
 };
 </script>

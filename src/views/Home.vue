@@ -1,19 +1,22 @@
 <template>
   <div>
     <app-movie-list
-      v-for="resource in allMovieLists"
+      v-for="resource in homeMovieLists"
       :key="resource.id"
       :resource="resource"
     />
 
-    <div class="m-5 text-center" v-if="allPassiveMovieListsArray.length > 0">
+    <div
+      class="m-5 text-center"
+      v-if="homePassiveMovieListsArray.length > 0"
+    >
       <h2>
         Want more? See other categories
       </h2>
       <app-button-toolbar
         @optionSelected="insertNewMovieSection"
         source="home"
-        :options="allPassiveMovieListsArray"
+        :options="homePassiveMovieListsArray"
         buttonSize="lg"
       />
     </div>
@@ -34,15 +37,23 @@ export default {
   },
   computed: {
     ...mapGetters(MOVIE_LISTS, [
-      "allMovieLists",
-      "allPassiveMovieLists",
-      "allPassiveMovieListsArray"
+      "homeMovieLists",
+      "homePassiveMovieLists",
+      "homePassiveMovieListsArray"
     ])
   },
   methods: {
     insertNewMovieSection($e) {
-      this.$store.dispatch(`${MOVIE_LISTS}/moveFromPassive`, $e);
+      this.$store.dispatch(`${MOVIE_LISTS}/moveToOtherList`, {
+        ...$e,
+        to: $e.listType
+      });
     }
+  },
+  mounted() {
+    this.$store.dispatch(`${MOVIE_LISTS}/getMovieListsByType`, {
+      listType: "home"
+    });
   }
 };
 </script>
